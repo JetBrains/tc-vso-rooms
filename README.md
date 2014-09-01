@@ -1,1 +1,1 @@
-TeamCity server plugin which allows to send notifications to Visual Studio Online romms
+TeamCity server plugin which allows to send notifications to Visual Studio Online rooms.
