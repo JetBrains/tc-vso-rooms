@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package jetbrains.buildServer.notification.vsoRooms;
-
-import jetbrains.buildServer.controllers.RememberState;
-
 /**
- * @author Evgeniy.Koshkin
+ * Created by Evgeniy.Koshkin on 01.09.2014.
  */
-public class VSONotificatorSettingsBean extends RememberState {
-}
+
+VSOTeamRooms = {};
+
+VSOTeamRooms.SettingsForm = OO.extend(BS.AbstractPasswordForm, {
+
+});

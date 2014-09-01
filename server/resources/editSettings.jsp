@@ -1,5 +1,3 @@
-<%@ include file="/include.jsp" %>
-
 <%--
   ~ Copyright 2000-2014 JetBrains s.r.o.
   ~
@@ -16,4 +14,72 @@
   ~ limitations under the License.
   --%>
 
-<jsp:useBean id="vsoRoomsSettings" scope="request" type="jetbrains.buildServer.notification.vsoRooms.VSONotificatorSettingsBean"/>
+<%@ include file="/include.jsp" %>
+
+<bs:linkCSS dynamic="${true}">
+  /plugins/vso-rooms/css/editSettings.css
+</bs:linkCSS>
+<bs:linkScript>
+  /plugins/vso-rooms/js/editSettings.js
+</bs:linkScript>
+
+<jsp:useBean id="vsoRoomsSettings" scope="request" type="jetbrains.buildServer.controllers.vsoRooms.VSONotificatorSettingsBean"/>
+
+<script type="text/javascript">
+  document.observe("dom:loaded", function() {
+    VSOTeamRooms.SettingsForm.setupEventHandlers();
+    $('account').focus();
+  });
+</script>
+
+<c:url value="/vso/notificatorSettings.html?edit=1" var="url"/>
+
+<div id="settingsContainer">
+  <form action="${url}" method="post" onsubmit="return VSOTeamRooms.SettingsForm.submitSettings()" autocomplete="off">
+    <div class="editNotificatorSettingsPage">
+      <c:choose>
+        <c:when test="${vsoRoomsSettings.paused}">
+          <div class="pauseNote" style="margin-bottom: 1em;">
+            The notifier is <strong>disabled</strong>. All team room messages are suspended&nbsp;&nbsp;<a class="btn btn_mini" href="#" id="enable-btn">Enable</a>
+          </div>
+        </c:when>
+        <c:otherwise>
+          <div style="margin-left: 0.6em;">
+            The notifier is <strong>enabled</strong>&nbsp;&nbsp;<a class="btn btn_mini" href="#" id="disable-btn">Disable</a>
+          </div>
+        </c:otherwise>
+      </c:choose>
+
+      <bs:messages key="settingsSaved"/>
+      <table class="runnerFormTable">
+        <tr>
+          <th><label for="account">Account: <l:star/></label></th>
+          <td>
+            <forms:textField name="account" value="${vsoRoomsSettings.account}"/>
+            <span class="error" id="errorAccount"></span>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="username">Username: <l:star/></label></th>
+          <td><forms:textField name="username" value="${vsoRoomsSettings.username}"/></td>
+        </tr>
+        <tr>
+          <th><label for="password">Password: <l:star/></label></th>
+          <td><forms:passwordField name="password" encryptedPassword="${vsoRoomsSettings.encryptedPassword}"/></td>
+        </tr>
+        <tr>
+          <th><label for="rooms">Team Room: <l:star/></label></th>
+          <td>
+            <forms:select name="rooms">
+              <c:forEach var="room" items="${vsoRoomsSettings.rooms}">
+                <forms:option value="${room.id}" selected="${room.id == vsoRoomsSettings.selectedRoomId}"><c:out
+                        value="${room.description}"/></forms:option>
+              </c:forEach>
+            </forms:select>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </form>
+</div>

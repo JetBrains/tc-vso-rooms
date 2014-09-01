@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package jetbrains.buildServer.notification.vsoRooms;
+package jetbrains.buildServer.controllers.vsoRooms;
 
 import jetbrains.buildServer.controllers.ActionErrors;
 import jetbrains.buildServer.controllers.admin.NotifierSettingsTab;
