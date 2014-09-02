@@ -14,31 +14,12 @@
  * limitations under the License.
  */
 
-package jetbrains.buildServer.controllers.vsoRooms;
-
-import jetbrains.buildServer.controllers.RememberState;
+package jetbrains.buildServer.vsoRooms;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class VSONotificatorSettingsBean extends RememberState {
-  private String myAccount;
-  private String myUsername;
-  private String myEncryptedPassword;
-
-  public boolean isPaused() {
-    return false;
-  }
-
-  public String getAccount() {
-    return myAccount;
-  }
-
-  public String getUsername() {
-    return myUsername;
-  }
-
-  public String getEncryptedPassword() {
-    return myEncryptedPassword;
-  }
+public class Constants {
+  public static final String NOTIFICATOR_TYPE = "vso-rooms";
+  public final static String CONFIG_FILENAME = "vso-rooms-notifier-config.xml";
 }

@@ -1,4 +1,4 @@
-package jetbrains.buildServer.notification.vsoRooms;/*
+/*
  * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,33 +14,16 @@ package jetbrains.buildServer.notification.vsoRooms;/*
  * limitations under the License.
  */
 
-import jetbrains.buildServer.notification.NotificatorAdapter;
-import jetbrains.buildServer.notification.NotificatorRegistry;
+package jetbrains.buildServer.vsoRooms.rest;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class VSORoomsNotificator extends NotificatorAdapter {
-
-  private static final String VSO_ROOMS_NOTIFICATOR_TYPE = "vso-rooms";
-
-  public VSORoomsNotificator(@NotNull NotificatorRegistry registry) {
-    registry.register(this);
-  }
-
+public class VSOTeamRoomsAPI {
   @NotNull
-  public String getNotificatorType() {
-    return VSO_ROOMS_NOTIFICATOR_TYPE;
-  }
-
-  @NotNull
-  @Override
-  public String getDisplayName() {
-    return "Visual Studio Online Notifier";
-  }
-
-  private void sendMessage(){
-
+  public static VSOTeamRoomsAPIConnection connect(@NotNull String account, @NotNull String user, @NotNull String password){
+    return new VSOTeamRoomsAPIConnection(account, user, password);
   }
 }

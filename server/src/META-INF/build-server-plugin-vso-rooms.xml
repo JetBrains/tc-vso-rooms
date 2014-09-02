@@ -9,8 +9,8 @@
   <!-- declare all beans you like Spring Dependency Injection to create -->
   <!-- see http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/beans.html -->
 
-  <bean class="jetbrains.buildServer.notification.vsoRooms.VSORoomsNotificator"/>
-  <bean class="jetbrains.buildServer.controllers.vsoRooms.VSONotificatorSettingsController"/>
-  <bean class="jetbrains.buildServer.controllers.vsoRooms.GetListOfTeamRoomsController"/>
+  <bean class="jetbrains.buildServer.vsoRooms.notificator.VSONotificator"/>
+  <bean class="jetbrains.buildServer.vsoRooms.controllers.VSONotificatorSettingsController"/>
+  <bean class="jetbrains.buildServer.vsoRooms.controllers.GetListOfTeamRoomsController"/>
 
 </beans>

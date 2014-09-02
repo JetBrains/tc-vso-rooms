@@ -23,7 +23,7 @@
   /plugins/vso-rooms/js/editSettings.js
 </bs:linkScript>
 
-<jsp:useBean id="vsoRoomsSettings" scope="request" type="jetbrains.buildServer.controllers.vsoRooms.VSONotificatorSettingsBean"/>
+<jsp:useBean id="vsoRoomsSettings" scope="request" type="jetbrains.buildServer.vsoRooms.controllers.VSONotificatorSettingsBean"/>
 
 <script type="text/javascript">
   document.observe("dom:loaded", function() {
