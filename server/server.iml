@@ -44,6 +44,7 @@
     <orderEntry type="library" name="Servlet Api" level="project" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="TeamCity server runtime" level="project" />
+    <orderEntry type="library" name="jackson" level="project" />
   </component>
 </module>
 

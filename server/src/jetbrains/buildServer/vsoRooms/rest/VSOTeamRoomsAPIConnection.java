@@ -16,10 +16,15 @@
 
 package jetbrains.buildServer.vsoRooms.rest;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.CommonsClientHttpRequestFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,34 +39,38 @@ public class VSOTeamRoomsAPIConnection {
   private static final Logger LOG = Logger.getLogger(VSOTeamRoomsAPIConnection.class);
 
   private final String myAccount;
-  private final String myUser;
-  private final String myPassword;
-
   private final RestTemplate myRestTemplate;
 
   public VSOTeamRoomsAPIConnection(@NotNull String account, @NotNull String user, @NotNull String password) {
     myAccount = account;
-    myUser = user;
-    myPassword = password;
-
-    myRestTemplate = new RestTemplate();
-    myRestTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+    myRestTemplate = createRestTemplate(user, password);
   }
 
   @Nullable
-  public TeamRoomMessage sendMessageToRoom(String roomId, String messageContent){
-    final String url = getRoomMessagesUrl(myAccount, roomId);
+  public String sendMessageToRoom(String roomId, String messageContent){
+    final String url = getRoomMessagesUrl(roomId);
     final Map<String, String> request = new HashMap<String, String>();
     request.put("content", messageContent);
     try{
-      return myRestTemplate.postForObject(url, request, TeamRoomMessage.class);
+      final ResponseEntity<String> responseEntity = myRestTemplate.postForEntity(url, request, String.class);
+      return responseEntity.getBody();
     } catch (RestClientException ex){
       LOG.warn(String.format("Failed to send message to the room with id %s.", roomId), ex);
       return null;
     }
   }
 
-  private String getRoomMessagesUrl(String account, String roomId) {
-    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%s/messages?api-version=1.0-preview.1", account, roomId);
+  private String getRoomMessagesUrl(String roomId) {
+    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%s/messages", myAccount, roomId);
+  }
+
+  private RestTemplate createRestTemplate(String username, String password) {
+    return new RestTemplate(createSecureTransport(username, password));
+  }
+
+  private ClientHttpRequestFactory createSecureTransport(String username, String password){
+    HttpClient client = new HttpClient();
+    client.getState().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+    return new CommonsClientHttpRequestFactory(client);
   }
 }

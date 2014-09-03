@@ -3,7 +3,7 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -12,13 +12,11 @@
     <orderEntry type="library" name="Test-Api" level="project" />
     <orderEntry type="library" name="testng" level="project" />
     <orderEntry type="library" name="jmock" level="project" />
-    <orderEntry type="library" name="testng" level="project" />
-    <orderEntry type="library" name="jmock" level="project" />
-    <orderEntry type="library" name="Test-Api" level="project" />
+    <orderEntry type="library" name="jackson" level="project" />
     <orderEntry type="library" name="Common-Api" level="project" />
     <orderEntry type="library" name="Agent-Api" level="project" />
     <orderEntry type="library" name="log4j" level="project" />
-    <orderEntry type="library" name="TeamCity server runtime" level="project" />
+    <orderEntry type="library" scope="TEST" name="TeamCity server runtime" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="TeamCity agent runtime" level="project" />
     <orderEntry type="library" name="Common-Impl" level="project" />
     <orderEntry type="library" name="Server-Api" level="project" />
