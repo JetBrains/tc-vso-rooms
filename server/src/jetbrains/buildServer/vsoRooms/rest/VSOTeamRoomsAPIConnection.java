@@ -16,20 +16,15 @@
 
 package jetbrains.buildServer.vsoRooms.rest;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.CommonsClientHttpRequestFactory;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Evgeniy.Koshkin
@@ -39,38 +34,40 @@ public class VSOTeamRoomsAPIConnection {
   private static final Logger LOG = Logger.getLogger(VSOTeamRoomsAPIConnection.class);
 
   private final String myAccount;
-  private final RestTemplate myRestTemplate;
+  @NotNull
+  private final String myUser;
+  @NotNull
+  private final String myPassword;
 
   public VSOTeamRoomsAPIConnection(@NotNull String account, @NotNull String user, @NotNull String password) {
     myAccount = account;
-    myRestTemplate = createRestTemplate(user, password);
+    myUser = user;
+    myPassword = password;
   }
 
   @Nullable
   public String sendMessageToRoom(String roomId, String messageContent){
-    final String url = getRoomMessagesUrl(roomId);
-    final Map<String, String> request = new HashMap<String, String>();
-    request.put("content", messageContent);
-    try{
-      final ResponseEntity<String> responseEntity = myRestTemplate.postForEntity(url, request, String.class);
-      return responseEntity.getBody();
-    } catch (RestClientException ex){
-      LOG.warn(String.format("Failed to send message to the room with id %s.", roomId), ex);
-      return null;
-    }
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Basic " + getEncodedCreds(myUser, myPassword));
+    headers.add("Content-type", "application/json");
+    HttpEntity<String> request = new HttpEntity<String>(getBody(messageContent), headers);
+    final RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response = restTemplate.exchange(getRoomMessagesUrl(roomId), HttpMethod.POST, request, String.class);
+    return response.getBody();
+  }
+
+  private String getBody(String messageContent) {
+    return String.format("{ \"content\": \"%s\" }", messageContent);
+  }
+
+  private static String getEncodedCreds(String user, String password) {
+    String plainCreds = String.format("%s:%s", user, password);
+    byte[] plainCredsBytes = plainCreds.getBytes();
+    byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
+    return new String(base64CredsBytes);
   }
 
   private String getRoomMessagesUrl(String roomId) {
     return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%s/messages", myAccount, roomId);
-  }
-
-  private RestTemplate createRestTemplate(String username, String password) {
-    return new RestTemplate(createSecureTransport(username, password));
-  }
-
-  private ClientHttpRequestFactory createSecureTransport(String username, String password){
-    HttpClient client = new HttpClient();
-    client.getState().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-    return new CommonsClientHttpRequestFactory(client);
   }
 }
