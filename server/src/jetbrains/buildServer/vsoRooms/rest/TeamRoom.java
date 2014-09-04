@@ -16,14 +16,38 @@
 
 package jetbrains.buildServer.vsoRooms.rest;
 
-import org.jetbrains.annotations.NotNull;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class VSOTeamRoomsAPI {
-  @NotNull
-  public static VSOTeamRoomsAPIConnection connect(@NotNull String user, @NotNull String password){
-    return new VSOTeamRoomsAPIConnection(user, password);
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class TeamRoom {
+  private long myId;
+  private String myName;
+  private String myDescription;
+
+  public long getId() {
+    return myId;
+  }
+
+  public String getName() {
+    return myName;
+  }
+
+  public String getDescription() {
+    return myDescription;
+  }
+
+  public void setId(long id) {
+    myId = id;
+  }
+
+  public void setName(String name) {
+    myName = name;
+  }
+
+  public void setDescription(String description) {
+    myDescription = description;
   }
 }

@@ -16,14 +16,23 @@
 
 package jetbrains.buildServer.vsoRooms.rest;
 
-import org.jetbrains.annotations.NotNull;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import java.util.List;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class VSOTeamRoomsAPI {
-  @NotNull
-  public static VSOTeamRoomsAPIConnection connect(@NotNull String user, @NotNull String password){
-    return new VSOTeamRoomsAPIConnection(user, password);
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class TeamRoomList {
+
+  private List<TeamRoom> myRooms;
+
+  public List<TeamRoom> getRooms() {
+    return myRooms;
+  }
+
+  public void setValue(List<TeamRoom> value) {
+    myRooms = value;
   }
 }

@@ -20,11 +20,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Evgeniy.Koshkin
@@ -33,31 +33,37 @@ public class VSOTeamRoomsAPIConnection {
 
   private static final Logger LOG = Logger.getLogger(VSOTeamRoomsAPIConnection.class);
 
-  private final String myAccount;
-  @NotNull
-  private final String myUser;
-  @NotNull
-  private final String myPassword;
+  @NotNull private final String myUser;
+  @NotNull private final String myPassword;
+  @NotNull private final RestTemplate myRestTemplate;
 
-  public VSOTeamRoomsAPIConnection(@NotNull String account, @NotNull String user, @NotNull String password) {
-    myAccount = account;
+  public VSOTeamRoomsAPIConnection(@NotNull String user, @NotNull String password) {
     myUser = user;
     myPassword = password;
+    myRestTemplate = new RestTemplate();
   }
 
   @Nullable
-  public String sendMessageToRoom(String roomId, String messageContent){
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Authorization", "Basic " + getEncodedCreds(myUser, myPassword));
-    headers.add("Content-type", "application/json");
-    HttpEntity<String> request = new HttpEntity<String>(getBody(messageContent), headers);
-    final RestTemplate restTemplate = new RestTemplate();
-    ResponseEntity<String> response = restTemplate.exchange(getRoomMessagesUrl(roomId), HttpMethod.POST, request, String.class);
-    return response.getBody();
+  public TeamRoomMessage sendMessageToRoom(@NotNull String account, @NotNull String roomId, @NotNull String messageContent){
+    final HttpHeaders requestHeaders = getRequestHeaders();
+    requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+    final HttpEntity<String> request = new HttpEntity<String>(getMessageBody(messageContent), requestHeaders);
+    final ResponseEntity<TeamRoomMessage> responseEntity = myRestTemplate.postForEntity(getRoomMessagesUrl(account, roomId), request, TeamRoomMessage.class);
+    return responseEntity.getBody();
   }
 
-  private String getBody(String messageContent) {
-    return String.format("{ \"content\": \"%s\" }", messageContent);
+  @NotNull
+  public Collection<TeamRoom> getListOfRooms(@NotNull String account) {
+    final HttpEntity<String> request = new HttpEntity<String>(getRequestHeaders());
+    final ResponseEntity<TeamRoomList> responseEntity = myRestTemplate.exchange(getListOfRoomsUrl(account), HttpMethod.GET, request, TeamRoomList.class);
+    return responseEntity.getBody().getRooms();
+  }
+
+  private HttpHeaders getRequestHeaders() {
+    final HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Basic " + getEncodedCreds(myUser, myPassword));
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    return headers;
   }
 
   private static String getEncodedCreds(String user, String password) {
@@ -67,7 +73,15 @@ public class VSOTeamRoomsAPIConnection {
     return new String(base64CredsBytes);
   }
 
-  private String getRoomMessagesUrl(String roomId) {
-    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%s/messages", myAccount, roomId);
+  private String getListOfRoomsUrl(String account) {
+    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms", account);
+  }
+
+  private String getRoomMessagesUrl(String account, String roomId) {
+    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%s/messages", account, roomId);
+  }
+
+  private String getMessageBody(String messageContent) {
+    return String.format("{ \"content\" : \"%s\" }", messageContent);
   }
 }

@@ -14,16 +14,31 @@
  * limitations under the License.
  */
 
-package jetbrains.buildServer.vsoRooms.rest;
-
-import org.jetbrains.annotations.NotNull;
+package jetbrains.buildServer.vsoRooms.controllers;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class VSOTeamRoomsAPI {
-  @NotNull
-  public static VSOTeamRoomsAPIConnection connect(@NotNull String user, @NotNull String password){
-    return new VSOTeamRoomsAPIConnection(user, password);
+public class TeamRoomBean {
+  private final long myId;
+  private final String myName;
+  private final String myDescription;
+
+  public TeamRoomBean(long id, String name, String description) {
+    myId = id;
+    myName = name;
+    myDescription = description;
+  }
+
+  public long getId() {
+    return myId;
+  }
+
+  public String getName() {
+    return myName;
+  }
+
+  public String getDescription() {
+    return myDescription;
   }
 }

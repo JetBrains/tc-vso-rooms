@@ -95,10 +95,10 @@ public class VSONotificator extends NotificatorAdapter {
       return;
     }
     final String message = map.get("message");
-    getApiConnection().sendMessageToRoom(myConfig.getRoomId(), message);
+    getApiConnection().sendMessageToRoom(myConfig.getAccount(), myConfig.getRoomId(), message);
   }
 
   private VSOTeamRoomsAPIConnection getApiConnection() {
-    return VSOTeamRoomsAPI.connect(myConfig.getAccount(), myConfig.getUser(), myConfig.getPassword());
+    return VSOTeamRoomsAPI.connect(myConfig.getUser(), myConfig.getPassword());
   }
 }
