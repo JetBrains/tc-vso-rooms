@@ -20,37 +20,35 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class JsonTeamRoomListConverter implements HttpMessageConverter<TeamRoomList> {
+public class JsonTeamRoomListConverter extends AbstractHttpMessageConverter<TeamRoomList> {
 
   private final ObjectMapper myMapper = new ObjectMapper();
 
-  public boolean canRead(Class<?> aClass, MediaType mediaType) {
-    return aClass.equals(TeamRoomList.class);
+  public JsonTeamRoomListConverter() {
+    super(MediaType.APPLICATION_JSON);
   }
 
-  public boolean canWrite(Class<?> aClass, MediaType mediaType) {
-    return false;
+  @Override
+  protected boolean supports(Class<?> aClass) {
+    return TeamRoomList.class.equals(aClass);
   }
 
-  public List<MediaType> getSupportedMediaTypes() {
-    return Collections.singletonList(MediaType.APPLICATION_JSON);
-  }
-
-  public TeamRoomList read(Class<? extends TeamRoomList> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
+  @Override
+  protected TeamRoomList readInternal(Class<? extends TeamRoomList> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
     return myMapper.readValue(httpInputMessage.getBody(), TeamRoomList.class);
   }
 
-  public void write(TeamRoomList teamRoomList, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+  @Override
+  protected void writeInternal(TeamRoomList teamRoomList, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+
   }
 }
