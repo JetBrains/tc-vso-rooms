@@ -20,6 +20,7 @@
   /plugins/vso-rooms/css/editSettings.css
 </bs:linkCSS>
 <bs:linkScript>
+  /js/bs/testConnection.js
   /plugins/vso-rooms/js/editSettings.js
 </bs:linkScript>
 
@@ -32,7 +33,7 @@
   });
 </script>
 
-<c:url value="/vso/notificatorSettings.html?edit=1" var="url"/>
+<c:url value="/vso/notificatorSettings.html" var="url"/>
 
 <div id="settingsContainer">
   <form action="${url}" method="post" onsubmit="return VSOTeamRooms.SettingsForm.submitSettings()" autocomplete="off">
@@ -51,6 +52,7 @@
       </c:choose>
 
       <bs:messages key="settingsSaved"/>
+
       <table class="runnerFormTable">
         <tr>
           <th><label for="account">Account: <l:star/></label></th>
@@ -67,19 +69,25 @@
           <th><label for="password">Password: <l:star/></label></th>
           <td><forms:passwordField name="password" encryptedPassword="${vsoRoomsSettings.encryptedPassword}"/></td>
         </tr>
-        <tr>
-          <th><label for="rooms">Team Room: <l:star/></label></th>
-          <td>
-            <forms:select name="rooms">
-              <c:forEach var="room" items="${vsoRoomsSettings.rooms}">
-                <forms:option value="${room.id}" selected="${room.id == vsoRoomsSettings.selectedRoomId}"><c:out
-                        value="${room.description}"/></forms:option>
-              </c:forEach>
-            </forms:select>
-          </td>
-        </tr>
       </table>
 
+      <div class="saveButtonsBlock">
+        <forms:submit label="Save"/>
+        <forms:submit id="testConnection" type="button" label="Test connection"/>
+        <input type="hidden" id="submitSettings" name="submitSettings" value="store"/>
+        <input type="hidden" id="publicKey" name="publicKey" value="<c:out value='${vsoRoomsSettings.hexEncodedPublicKey}'/>"/>
+        <forms:saving/>
+      </div>
+
     </div>
+
   </form>
 </div>
+
+<bs:dialog dialogId="testConnectionDialog" title="Test Connection" closeCommand="BS.TestConnectionDialog.close();"
+           closeAttrs="showdiscardchangesmessage='false'">
+  <div id="testConnectionStatus"></div>
+  <div id="testConnectionDetails" class="mono"></div>
+</bs:dialog>
+
+<forms:modified/>

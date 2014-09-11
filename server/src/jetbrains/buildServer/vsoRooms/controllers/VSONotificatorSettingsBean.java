@@ -17,6 +17,8 @@
 package jetbrains.buildServer.vsoRooms.controllers;
 
 import jetbrains.buildServer.controllers.RememberState;
+import jetbrains.buildServer.serverSide.crypt.RSACipher;
+import jetbrains.buildServer.util.StringUtil;
 
 /**
  * @author Evgeniy.Koshkin
@@ -24,6 +26,7 @@ import jetbrains.buildServer.controllers.RememberState;
 public class VSONotificatorSettingsBean extends RememberState {
   private String myAccount;
   private String myUsername;
+  private String myPassword;
   private String myEncryptedPassword;
 
   public boolean isPaused() {
@@ -38,7 +41,11 @@ public class VSONotificatorSettingsBean extends RememberState {
     return myUsername;
   }
 
+  public String getHexEncodedPublicKey() {
+    return RSACipher.getHexEncodedPublicKey();
+  }
+
   public String getEncryptedPassword() {
-    return myEncryptedPassword;
+    return StringUtil.isEmpty(myPassword) ? "" : RSACipher.encryptDataForWeb(myPassword);
   }
 }

@@ -50,12 +50,12 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
 
   @Override
   protected ActionErrors validate(VSONotificatorSettingsBean vsoNotificatorSettingsBean) {
-    return null;
+    return new ActionErrors();
   }
 
   @Override
   protected String testSettings(VSONotificatorSettingsBean vsoNotificatorSettingsBean, HttpServletRequest httpServletRequest) {
-    return null;
+    return "Jhopa";
   }
 
   @Override

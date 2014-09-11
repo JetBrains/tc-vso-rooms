@@ -21,5 +21,59 @@
 VSOTeamRooms = {};
 
 VSOTeamRooms.SettingsForm = OO.extend(BS.AbstractPasswordForm, {
+  setupEventHandlers: function() {
+    var that = this;
+    $('testConnection').on('click', this.testConnection.bindAsEventListener(this));
+  },
 
+  submitSettings: function() {
+    var that = this;
+    $("submitSettings").value = 'store';
+
+    this.removeUpdateStateHandlers();
+
+    BS.PasswordFormSaver.save(this, this.formElement().action, OO.extend(BS.ErrorsAwareListener, this.createErrorListener()));
+
+    return false;
+  },
+
+  testConnection: function (){
+    $("submitSettings").value = 'testConnection';
+    var listener = OO.extend(BS.ErrorsAwareListener, this.createErrorListener());
+    var oldOnCompleteSave = listener['onCompleteSave'];
+    listener.onCompleteSave = function(form, responseXML, err) {
+      oldOnCompleteSave(form, responseXML, err);
+      if (!err) {
+        form.enable();
+        if (responseXML) {
+          var res = responseXML.getElementsByTagName("testConnectionResult");
+          if (res.length > 0) {   // trouble
+            BS.TestConnectionDialog.show(false, res[0].firstChild.nodeValue, $('testConnection'));
+          } else {
+            BS.TestConnectionDialog.show(true, "", $('testConnection'));
+          }
+        }
+      }
+    };
+
+    BS.PasswordFormSaver.save(this, this.formElement().action, listener);
+  },
+
+  createErrorListener: function() {
+    var that = this;
+    return {
+      onException: function(form, e) {
+        console.trace(e);
+      },
+
+      onCompleteSave: function(form, responseXML, err) {
+        BS.ErrorsAwareListener.onCompleteSave(form, responseXML, err);
+        if (!err) {
+          BS.XMLResponse.processRedirect(responseXML);
+        } else {
+          that.setupEventHandlers();
+        }
+      }
+    };
+  }
 });
