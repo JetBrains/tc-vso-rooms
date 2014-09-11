@@ -16,7 +16,7 @@
 
 package jetbrains.buildServer.vsoRooms.rest;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 

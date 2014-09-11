@@ -21,10 +21,13 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Evgeniy.Koshkin
@@ -41,6 +44,11 @@ public class VSOTeamRoomsAPIConnection {
     myUser = user;
     myPassword = password;
     myRestTemplate = new RestTemplate();
+    List<HttpMessageConverter<?>> customConverters = new ArrayList<HttpMessageConverter<?>>();
+    customConverters.add(new JsonTeamRoomListConverter());
+    customConverters.add(new JsonTeamRoomMessageConverter());
+    customConverters.add(new StringJsonConverter());
+    myRestTemplate.setMessageConverters(customConverters);
   }
 
   @Nullable

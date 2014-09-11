@@ -16,14 +16,32 @@
 
 package jetbrains.buildServer.vsoRooms.rest;
 
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Evgeniy.Koshkin
  */
 public class VSOTeamRoomsAPI {
+
+  private static final Logger LOG = Logger.getLogger(VSOTeamRoomsAPI.class);
+
   @NotNull
   public static VSOTeamRoomsAPIConnection connect(@NotNull String user, @NotNull String password){
     return new VSOTeamRoomsAPIConnection(user, password);
+  }
+
+  @Nullable
+  public static String testConnection(@NotNull String account, @NotNull String username, @NotNull String password) {
+    final VSOTeamRoomsAPIConnection apiConnection = connect(username, password);
+    try{
+      if(apiConnection.getListOfRooms(account).isEmpty())
+        return String.format("Found no team rooms for account %s", account);
+    } catch (Exception ex){
+      LOG.debug(String.format("Failed to list team rooms of account %s", account), ex);
+      return ex.getMessage();
+    }
+    return null;
   }
 }

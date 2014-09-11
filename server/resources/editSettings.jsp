@@ -17,6 +17,8 @@
 <%@ include file="/include.jsp" %>
 
 <bs:linkCSS dynamic="${true}">
+  /css/admin/adminMain.css
+  /css/admin/serverConfig.css
   /plugins/vso-rooms/css/editSettings.css
 </bs:linkCSS>
 <bs:linkScript>

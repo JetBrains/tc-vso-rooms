@@ -18,6 +18,7 @@ package jetbrains.buildServer.vsoRooms.controllers;
 
 import jetbrains.buildServer.controllers.ActionErrors;
 import jetbrains.buildServer.controllers.admin.NotifierSettingsTab;
+import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
 import org.jetbrains.annotations.NotNull;
@@ -54,8 +55,8 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
   }
 
   @Override
-  protected String testSettings(VSONotificatorSettingsBean vsoNotificatorSettingsBean, HttpServletRequest httpServletRequest) {
-    return "Jhopa";
+  protected String testSettings(VSONotificatorSettingsBean settingsBean, HttpServletRequest httpServletRequest) {
+    return VSOTeamRoomsAPI.testConnection(settingsBean.getAccount(), settingsBean.getUsername(), settingsBean.getPassword());
   }
 
   @Override
