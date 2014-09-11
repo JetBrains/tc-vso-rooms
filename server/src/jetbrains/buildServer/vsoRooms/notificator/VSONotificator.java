@@ -24,7 +24,6 @@ import jetbrains.buildServer.notification.TemplateMessageBuilder;
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SRunningBuild;
-import jetbrains.buildServer.serverSide.ServerPaths;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.vsoRooms.Constants;
 import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
@@ -50,9 +49,9 @@ public class VSONotificator extends NotificatorAdapter {
   public VSONotificator(@NotNull NotificatorRegistry registry,
                         @NotNull TemplateMessageBuilder builder,
                         @NotNull SBuildServer server,
-                        @NotNull ServerPaths paths) throws IOException {
+                        @NotNull VSONotificatorConfigHolder configHolder) throws IOException {
     myMessageBuilder = builder;
-    myConfig = new VSONotificatorConfig(paths, server);
+    myConfig = configHolder.getConfig();
     server.addListener(new BuildServerAdapter() {
       @Override
       public void serverShutdown() {

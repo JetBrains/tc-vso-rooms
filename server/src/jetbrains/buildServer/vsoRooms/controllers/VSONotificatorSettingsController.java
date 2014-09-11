@@ -18,6 +18,8 @@ package jetbrains.buildServer.vsoRooms.controllers;
 
 import jetbrains.buildServer.controllers.ActionErrors;
 import jetbrains.buildServer.controllers.admin.NotifierSettingsTab;
+import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfig;
+import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfigHolder;
 import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
@@ -33,10 +35,13 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
   private static final String SETTINGS_BEAN_KEY = "vsoRoomsSettings";
   private static final String EDIT_SETTINGS_URL = "/vso/notificatorSettings.html";
 
-  public VSONotificatorSettingsController(@NotNull PluginDescriptor pluginDescriptor,
-                                          @NotNull WebControllerManager webControllerManager) {
-    super(pluginDescriptor, webControllerManager, SETTINGS_BEAN_KEY, "Visual Studio Online Notifier");
+  private final VSONotificatorConfig myConfig;
 
+  public VSONotificatorSettingsController(@NotNull PluginDescriptor pluginDescriptor,
+                                          @NotNull WebControllerManager webControllerManager,
+                                          @NotNull VSONotificatorConfigHolder configHolder) {
+    super(pluginDescriptor, webControllerManager, SETTINGS_BEAN_KEY, "Visual Studio Online Notifier");
+    myConfig = configHolder.getConfig();
   }
 
   @Override
@@ -50,8 +55,18 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
   }
 
   @Override
-  protected ActionErrors validate(VSONotificatorSettingsBean vsoNotificatorSettingsBean) {
-    return new ActionErrors();
+  protected ActionErrors validate(VSONotificatorSettingsBean settingsBean) {
+    final ActionErrors errors = new ActionErrors();
+    if (settingsBean.getAccount() == null || settingsBean.getAccount().trim().length() == 0) {
+      errors.addError("emptyAccount", "Account must not be empty");
+    }
+    if (settingsBean.getUsername() == null || settingsBean.getUsername().trim().length() == 0) {
+      errors.addError("emptyUsername", "Username must not be empty");
+    }
+    if (settingsBean.getPassword() == null || settingsBean.getPassword().trim().length() == 0) {
+      errors.addError("emptyPassword", "Password must not be empty");
+    }
+    return errors;
   }
 
   @Override
@@ -60,7 +75,10 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
   }
 
   @Override
-  protected void saveSettings(VSONotificatorSettingsBean vsoNotificatorSettingsBean) {
-
+  protected void saveSettings(VSONotificatorSettingsBean settingsBean) {
+    myConfig.setAccount(settingsBean.getAccount());
+    myConfig.setUser(settingsBean.getUsername());
+    myConfig.setPassword(settingsBean.getPassword());
+    myConfig.save();
   }
 }

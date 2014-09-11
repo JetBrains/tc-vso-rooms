@@ -25,6 +25,7 @@ import jetbrains.buildServer.notification.FreeMarkerHelper;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.ServerPaths;
 import jetbrains.buildServer.serverSide.crypt.EncryptUtil;
+import jetbrains.buildServer.util.FileUtil;
 import jetbrains.buildServer.vsoRooms.Constants;
 import org.apache.log4j.Logger;
 import org.jdom.Attribute;
@@ -46,7 +47,6 @@ public class VSONotificatorConfig implements ChangeListener {
   private static final String ACCOUNT = "account";
   private static final String USER = "user";
   private static final String PASSWORD = "password";
-  private static final String ROOM_ID = "room-id";
   private static final String PAUSED = "paused";
 
   private final File myConfigFile;
@@ -56,7 +56,6 @@ public class VSONotificatorConfig implements ChangeListener {
   private String myAccount;
   private String myUser;
   private String myPassword;
-  private String myRoomId;
   private boolean myPaused;
 
   public VSONotificatorConfig(@NotNull ServerPaths serverPaths, @NotNull SBuildServer server) throws IOException {
@@ -97,12 +96,36 @@ public class VSONotificatorConfig implements ChangeListener {
     return myPassword;
   }
 
-  public String getRoomId() {
-    return myRoomId;
+  public void setAccount(String account) {
+    myAccount = account;
+  }
+
+  public void setUser(String user) {
+    myUser = user;
+  }
+
+  public void setPassword(String password) {
+    myPassword = password;
   }
 
   public Template getTemplate(@NotNull String name) throws IOException {
     return myConfiguration.getTemplate("/" + Constants.NOTIFICATOR_TYPE + "/" + name + ".ftl");
+  }
+
+  public void save() {
+    myChangeObserver.runActionWithDisabledObserver(new Runnable() {
+      public void run() {
+        FileUtil.processXmlFile(myConfigFile, new FileUtil.Processor() {
+          public void process(Element rootElement) {
+            rootElement.setAttribute(ACCOUNT, myAccount);
+            rootElement.setAttribute(USER, myUser);
+            String pass = myPassword != null ? EncryptUtil.scramble(myPassword) : null;
+            rootElement.setAttribute(PASSWORD, pass);
+            rootElement.setAttribute(PAUSED, Boolean.toString(myPaused));
+          }
+        });
+      }
+    });
   }
 
   private synchronized void reloadConfiguration() {
@@ -121,7 +144,6 @@ public class VSONotificatorConfig implements ChangeListener {
         myPassword = passwordAttr;
       }
     }
-    myRoomId = rootElement.getAttributeValue(ROOM_ID);
     final Attribute attribute = rootElement.getAttribute(PAUSED);
     if (attribute != null) {
       myPaused = true;
