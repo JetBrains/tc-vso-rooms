@@ -125,7 +125,7 @@ public class VSONotificator extends NotificatorAdapter {
       try{
         connection.sendMessageToRoom(myConfig.getAccount(), roomId, message);
       } catch (Exception ex){
-        LOG.warn("Failed to send message to the team room " + roomId, ex);
+        LOG.warn("Failed to send message to the team room with ID " + roomId, ex);
       }
     }
   }
