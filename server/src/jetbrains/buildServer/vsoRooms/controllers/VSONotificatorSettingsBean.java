@@ -32,12 +32,6 @@ public class VSONotificatorSettingsBean extends RememberState {
   public VSONotificatorSettingsBean() {
   }
 
-  public VSONotificatorSettingsBean(String account, String username, String password) {
-    myAccount = account;
-    myUsername = username;
-    myPassword = password;
-  }
-
   public boolean isPaused() {
     return false;
   }

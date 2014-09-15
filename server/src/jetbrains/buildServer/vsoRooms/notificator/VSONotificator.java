@@ -24,6 +24,7 @@ import jetbrains.buildServer.notification.TemplateMessageBuilder;
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SRunningBuild;
+import jetbrains.buildServer.serverSide.UserPropertyInfo;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.vsoRooms.Constants;
 import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
@@ -32,6 +33,8 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,6 +45,12 @@ public class VSONotificator extends NotificatorAdapter {
 
   private static final Logger LOG = Logger.getLogger(VSONotificator.class);
   private static final String BUILD_FAILED_EVENT = "build_failed";
+
+
+  private final static List<UserPropertyInfo> USER_PROPERTIES = new ArrayList<UserPropertyInfo>();
+  static {
+    USER_PROPERTIES.add(new UserPropertyInfo(Constants.VSO_TEAM_ROOM_USER_PROPERTY_NAME, "Team room name"));
+  }
 
   private final TemplateMessageBuilder myMessageBuilder;
   private final VSONotificatorConfig myConfig;
@@ -58,7 +67,7 @@ public class VSONotificator extends NotificatorAdapter {
         myConfig.dispose();
       }
     });
-    registry.register(this);
+    registry.register(this, USER_PROPERTIES);
   }
 
   @NotNull
@@ -94,7 +103,7 @@ public class VSONotificator extends NotificatorAdapter {
       return;
     }
     final String message = map.get("message");
-    getApiConnection().sendMessageToRoom(myConfig.getAccount(), myConfig.getRoomId(), message);
+    getApiConnection().sendMessageToRoom(myConfig.getAccount(), "foo-room", message);
   }
 
   private VSOTeamRoomsAPIConnection getApiConnection() {
