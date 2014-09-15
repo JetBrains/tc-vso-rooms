@@ -25,6 +25,7 @@ import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.serverSide.UserPropertyInfo;
+import jetbrains.buildServer.users.NotificatorPropertyKey;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.vsoRooms.Constants;
 import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
@@ -33,10 +34,7 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Evgeniy.Koshkin
@@ -49,7 +47,7 @@ public class VSONotificator extends NotificatorAdapter {
 
   private final static List<UserPropertyInfo> USER_PROPERTIES = new ArrayList<UserPropertyInfo>();
   static {
-    USER_PROPERTIES.add(new UserPropertyInfo(Constants.VSO_TEAM_ROOM_USER_PROPERTY_NAME, "Team room name"));
+    USER_PROPERTIES.add(new UserPropertyInfo(Constants.VSO_TEAM_ROOM_ID_USER_PROPERTY_NAME, "Team room ID"));
   }
 
   private final TemplateMessageBuilder myMessageBuilder;
@@ -83,15 +81,33 @@ public class VSONotificator extends NotificatorAdapter {
 
   @Override
   public void notifyBuildFailed(@NotNull SRunningBuild build, @NotNull Set<SUser> users) {
-    Map<String, Object> root = myMessageBuilder.getBuildFailedMap(build, users);
-    sendNotification(root, BUILD_FAILED_EVENT);
+    final Map<String, Object> root = myMessageBuilder.getBuildFailedMap(build, users);
+    sendNotification(getTargetRoomIds(users), root, BUILD_FAILED_EVENT);
   }
 
-  private void sendNotification(Map<String, Object> root, String event) {
+  private Set<String> getTargetRoomIds(Set<SUser> users) {
+    final NotificatorPropertyKey key = new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, Constants.VSO_TEAM_ROOM_ID_USER_PROPERTY_NAME);
+    final Set<String> result = new HashSet<String>();
+    for (SUser user : users){
+      final String roomName = user.getPropertyValue(key);
+      if (roomName != null) {
+        result.add(roomName);
+      }
+    }
+    return result;
+  }
+
+  private void sendNotification(Set<String> roomIds, Map<String, Object> root, String event) {
     if(myConfig.isPaused()){
       LOG.debug("Skip sending message. Notifier is disabled.");
       return;
     }
+
+    if(roomIds.isEmpty()){
+      LOG.debug("Skip sending message. No target team rooms found.");
+      return;
+    }
+
     final Map<String, String> map;
     try {
       map = FreeMarkerHelper.processTemplate(myConfig.getTemplate(event), root);
@@ -103,7 +119,15 @@ public class VSONotificator extends NotificatorAdapter {
       return;
     }
     final String message = map.get("message");
-    getApiConnection().sendMessageToRoom(myConfig.getAccount(), "foo-room", message);
+
+    final VSOTeamRoomsAPIConnection connection = getApiConnection();
+    for (String roomId : roomIds){
+      try{
+        connection.sendMessageToRoom(myConfig.getAccount(), roomId, message);
+      } catch (Exception ex){
+        LOG.warn("Failed to send message to the team room " + roomId, ex);
+      }
+    }
   }
 
   private VSOTeamRoomsAPIConnection getApiConnection() {

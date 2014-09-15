@@ -22,5 +22,5 @@ package jetbrains.buildServer.vsoRooms;
 public class Constants {
   public static final String NOTIFICATOR_TYPE = "vso-rooms";
   public static final String CONFIG_FILENAME = "vso-rooms-notifier-config.xml";
-  public static final String VSO_TEAM_ROOM_USER_PROPERTY_NAME = "vso-team-room";
+  public static final String VSO_TEAM_ROOM_ID_USER_PROPERTY_NAME = "vso-team-room-id";
 }
