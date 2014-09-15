@@ -13,6 +13,5 @@
   <bean class="jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfigHolder"/>
   <bean class="jetbrains.buildServer.vsoRooms.controllers.VSONotificatorSettingsController"/>
   <bean class="jetbrains.buildServer.vsoRooms.controllers.UserVSONotificationSettingsExtension"/>
-  <bean class="jetbrains.buildServer.vsoRooms.controllers.GetListOfTeamRoomsController"/>
 
 </beans>
