@@ -19,7 +19,7 @@
 <jsp:useBean id="showPausedWarning" type="java.lang.Boolean" scope="request"/>
 <c:choose><c:when test="${showPausedWarning}">
   <div class="attentionComment attentionCommentNotifier">
-      Notification rules will not work because Visual Studio notifier is disabled.
+      Notification rules will not work because Visual Studio Online notifier is disabled.
   </div>
   </c:when>
   <c:when test="${showNotConfiguredWarning}">
