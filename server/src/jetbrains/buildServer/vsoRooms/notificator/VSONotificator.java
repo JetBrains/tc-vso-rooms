@@ -21,10 +21,7 @@ import jetbrains.buildServer.notification.FreeMarkerHelper;
 import jetbrains.buildServer.notification.NotificatorAdapter;
 import jetbrains.buildServer.notification.NotificatorRegistry;
 import jetbrains.buildServer.notification.TemplateMessageBuilder;
-import jetbrains.buildServer.serverSide.BuildServerAdapter;
-import jetbrains.buildServer.serverSide.SBuildServer;
-import jetbrains.buildServer.serverSide.SRunningBuild;
-import jetbrains.buildServer.serverSide.UserPropertyInfo;
+import jetbrains.buildServer.serverSide.*;
 import jetbrains.buildServer.users.NotificatorPropertyKey;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.vsoRooms.Constants;
@@ -43,7 +40,7 @@ public class VSONotificator extends NotificatorAdapter {
 
   private static final Logger LOG = Logger.getLogger(VSONotificator.class);
   private static final String BUILD_FAILED_EVENT = "build_failed";
-
+  private static final String BUILD_TYPE_RESPONSIBILITY_ASSIGNED_TO_ME = "build_type_responsibility_assigned_to_me";
 
   private final static List<UserPropertyInfo> USER_PROPERTIES = new ArrayList<UserPropertyInfo>();
   static {
@@ -83,6 +80,12 @@ public class VSONotificator extends NotificatorAdapter {
   public void notifyBuildFailed(@NotNull SRunningBuild build, @NotNull Set<SUser> users) {
     final Map<String, Object> root = myMessageBuilder.getBuildFailedMap(build, users);
     sendNotification(getTargetRoomIds(users), root, BUILD_FAILED_EVENT);
+  }
+
+  @Override
+  public void notifyResponsibleAssigned(@NotNull SBuildType buildType, @NotNull Set<SUser> users) {
+    final Map<String, Object> root = myMessageBuilder.getBuildTypeResponsibilityAssignedMap(buildType, users);
+    sendNotification(getTargetRoomIds(users), root, BUILD_TYPE_RESPONSIBILITY_ASSIGNED_TO_ME);
   }
 
   private Set<String> getTargetRoomIds(Set<SUser> users) {
