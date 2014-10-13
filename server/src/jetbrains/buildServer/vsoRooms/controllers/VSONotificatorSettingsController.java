@@ -40,7 +40,7 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
   public VSONotificatorSettingsController(@NotNull PluginDescriptor pluginDescriptor,
                                           @NotNull WebControllerManager webControllerManager,
                                           @NotNull VSONotificatorConfigHolder configHolder) {
-    super(pluginDescriptor, webControllerManager, SETTINGS_BEAN_KEY, "Visual Studio Online Notifier");
+    super(pluginDescriptor, webControllerManager, SETTINGS_BEAN_KEY, "VSO Notifier");
     myConfig = configHolder.getConfig();
   }
 

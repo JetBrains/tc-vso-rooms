@@ -76,7 +76,7 @@ public class VSONotificator extends NotificatorAdapter {
   @NotNull
   @Override
   public String getDisplayName() {
-    return "Visual Studio Online Notifier";
+    return "VSO Notifier";
   }
 
   @Override
