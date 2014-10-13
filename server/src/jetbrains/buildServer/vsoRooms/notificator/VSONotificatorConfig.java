@@ -84,6 +84,10 @@ public class VSONotificatorConfig implements ChangeListener {
     return myPaused;
   }
 
+  public void setPaused(boolean paused) {
+    myPaused = paused;
+  }
+
   public String getAccount() {
     return myAccount;
   }

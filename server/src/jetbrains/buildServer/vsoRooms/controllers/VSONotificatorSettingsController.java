@@ -42,6 +42,7 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
                                           @NotNull VSONotificatorConfigHolder configHolder) {
     super(pluginDescriptor, webControllerManager, SETTINGS_BEAN_KEY, "VSO Notifier");
     myConfig = configHolder.getConfig();
+    registerDisableActions();
   }
 
   @Override
@@ -80,5 +81,20 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
     myConfig.setUser(settingsBean.getUsername());
     myConfig.setPassword(settingsBean.getPassword());
     myConfig.save();
+  }
+
+  private void registerDisableActions() {
+    addAction("enable", new Action() {
+      public void run(HttpServletRequest request) throws Exception {
+        myConfig.setPaused(false);
+        myConfig.save();
+      }
+    });
+    addAction("disable", new Action() {
+      public void run(HttpServletRequest request) throws Exception {
+        myConfig.setPaused(true);
+        myConfig.save();
+      }
+    });
   }
 }
