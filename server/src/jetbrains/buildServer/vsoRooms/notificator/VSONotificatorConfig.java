@@ -60,7 +60,9 @@ public class VSONotificatorConfig implements ChangeListener {
 
   public VSONotificatorConfig(@NotNull ServerPaths serverPaths, @NotNull SBuildServer server) throws IOException {
     final File configDir = new File(serverPaths.getConfigDir(), FreeMarkerHelper.TEMPLATES_ROOT + "/" + Constants.NOTIFICATOR_TYPE);
+    configDir.mkdirs();
     myConfigFile = new File(configDir, Constants.CONFIG_FILENAME);
+    FileUtil.copyResourceIfNotExists(getClass(), "/message_templates/" + Constants.CONFIG_FILENAME, myConfigFile);
 
     reloadConfiguration();
 
