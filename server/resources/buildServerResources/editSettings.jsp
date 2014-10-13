@@ -35,7 +35,7 @@
   });
 </script>
 
-<c:url value="/vso/notificatorSettings.html" var="url"/>
+<c:url value="/vso/notificatorSettings.html?edit=1" var="url"/>
 
 <div id="settingsContainer">
   <form action="${url}" method="post" onsubmit="return VSOTeamRooms.SettingsForm.submitSettings()" autocomplete="off">
@@ -99,3 +99,23 @@
 </bs:dialog>
 
 <forms:modified/>
+
+<script type="text/javascript">
+  (function($) {
+    var sendAction = function(enable) {
+      $.post("${url}&action=" + (enable ? 'enable' : 'disable'), function() {
+        BS.reload(true);
+      });
+      return false;
+    };
+
+    $("#enable-btn").click(function() {
+      return sendAction(true);
+    });
+
+    $("#disable-btn").click(function() {
+      if (!confirm("Visual Studio Team Rooms notifications will not be sent until enabled. Disable the notifier?")) return false;
+      return sendAction(false);
+    })
+  })(jQuery);
+</script>

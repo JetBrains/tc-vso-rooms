@@ -25,15 +25,16 @@ import jetbrains.buildServer.util.StringUtil;
  * @author Evgeniy.Koshkin
  */
 public class VSONotificatorSettingsBean extends RememberState {
-  private String myAccount = "";
-  private String myUsername = "";
-  private String myPassword = "";
-  private boolean myPaused = false;
+  private String myAccount;
+  private String myUsername;
+  private String myPassword;
+  private boolean myPaused;
 
-  public VSONotificatorSettingsBean(String account, String user, String password) {
+  public VSONotificatorSettingsBean(String account, String user, String password, boolean paused) {
     myAccount = account;
     myUsername = user;
     myPassword = password;
+    myPaused = paused;
     rememberState();
   }
 

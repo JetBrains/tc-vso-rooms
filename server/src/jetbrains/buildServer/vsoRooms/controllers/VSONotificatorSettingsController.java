@@ -52,7 +52,7 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
 
   @Override
   protected VSONotificatorSettingsBean createSettingsBean(HttpServletRequest httpServletRequest) {
-    return new VSONotificatorSettingsBean(myConfig.getAccount(), myConfig.getUser(), myConfig.getPassword());
+    return new VSONotificatorSettingsBean(myConfig.getAccount(), myConfig.getUser(), myConfig.getPassword(), myConfig.isPaused());
   }
 
   @Override
