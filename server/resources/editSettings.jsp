@@ -65,11 +65,17 @@
         </tr>
         <tr>
           <th><label for="username">Username: <l:star/></label></th>
-          <td><forms:textField name="username" value="${vsoRoomsSettings.username}"/></td>
+          <td>
+            <forms:textField name="username" value="${vsoRoomsSettings.username}"/>
+            <span class="error" id="errorUsername"></span>
+          </td>
         </tr>
         <tr>
           <th><label for="password">Password: <l:star/></label></th>
-          <td><forms:passwordField name="password" encryptedPassword="${vsoRoomsSettings.encryptedPassword}"/></td>
+          <td>
+            <forms:passwordField name="password" encryptedPassword="${vsoRoomsSettings.encryptedPassword}"/>
+            <span class="error" id="errorPassword"></span>
+          </td>
         </tr>
       </table>
 

@@ -66,6 +66,21 @@ VSOTeamRooms.SettingsForm = OO.extend(BS.AbstractPasswordForm, {
         console.trace(e);
       },
 
+      onEmptyAccountError: function(elem) {
+        $("errorAccount").innerHTML = elem.firstChild.nodeValue;
+        that.highlightErrorField($("account"));
+      },
+
+      onEmptyUsernameError: function(elem) {
+        $("errorUsername").innerHTML = elem.firstChild.nodeValue;
+        that.highlightErrorField($("username"));
+      },
+
+      onEmptyPasswordError: function(elem) {
+        $("errorPassword").innerHTML = elem.firstChild.nodeValue;
+        that.highlightErrorField($("password"));
+      },
+
       onCompleteSave: function(form, responseXML, err) {
         BS.ErrorsAwareListener.onCompleteSave(form, responseXML, err);
         if (!err) {
