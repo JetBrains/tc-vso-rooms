@@ -79,8 +79,8 @@ public class UserVSONotificationSettingsExtension extends SimplePageExtension {
 
     boolean showNotConfiguredWarning = false;
     if (myRulesManager.isRulesWithEventsConfigured(user.getId(), getPluginName())) {
-      final String teamRoomId = user.getPropertyValue(new NotificatorPropertyKey(getPluginName(), Constants.VSO_TEAM_ROOM_ID_USER_PROPERTY_NAME));
-      showNotConfiguredWarning = teamRoomId == null || teamRoomId.isEmpty();
+      final String teamRoomName = user.getPropertyValue(new NotificatorPropertyKey(getPluginName(), Constants.VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME));
+      showNotConfiguredWarning = teamRoomName == null || teamRoomName.isEmpty();
     }
 
     model.put("showNotConfiguredWarning", showNotConfiguredWarning);

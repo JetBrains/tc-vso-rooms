@@ -44,17 +44,20 @@ public class VSONotificator extends NotificatorAdapter {
 
   private final static List<UserPropertyInfo> USER_PROPERTIES = new ArrayList<UserPropertyInfo>();
   static {
-    USER_PROPERTIES.add(new UserPropertyInfo(Constants.VSO_TEAM_ROOM_ID_USER_PROPERTY_NAME, "Team room ID"));
+    USER_PROPERTIES.add(new UserPropertyInfo(Constants.VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME, "Team room name"));
   }
 
   private final TemplateMessageBuilder myMessageBuilder;
   private final VSONotificatorConfig myConfig;
+  private VSOTeamRooms myTeamRooms;
 
   public VSONotificator(@NotNull NotificatorRegistry registry,
                         @NotNull TemplateMessageBuilder builder,
                         @NotNull SBuildServer server,
-                        @NotNull VSONotificatorConfigHolder configHolder) throws IOException {
+                        @NotNull VSONotificatorConfigHolder configHolder,
+                        @NotNull VSOTeamRooms teamRooms) throws IOException {
     myMessageBuilder = builder;
+    myTeamRooms = teamRooms;
     myConfig = configHolder.getConfig();
     server.addListener(new BuildServerAdapter() {
       @Override
@@ -88,19 +91,22 @@ public class VSONotificator extends NotificatorAdapter {
     sendNotification(getTargetRoomIds(users), root, BUILD_TYPE_RESPONSIBILITY_ASSIGNED_TO_ME);
   }
 
-  private Set<String> getTargetRoomIds(Set<SUser> users) {
-    final NotificatorPropertyKey key = new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, Constants.VSO_TEAM_ROOM_ID_USER_PROPERTY_NAME);
-    final Set<String> result = new HashSet<String>();
+  private Set<Long> getTargetRoomIds(Set<SUser> users) {
+    final NotificatorPropertyKey key = new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, Constants.VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME);
+    final Set<Long> roomIds = new HashSet<Long>();
     for (SUser user : users){
       final String roomName = user.getPropertyValue(key);
       if (roomName != null) {
-        result.add(roomName);
+        final Long roomId = myTeamRooms.getOrResolveRoomId(roomName);
+        if(roomId != null){
+          roomIds.add(roomId);
+        }
       }
     }
-    return result;
+    return roomIds;
   }
 
-  private void sendNotification(Set<String> roomIds, Map<String, Object> root, String event) {
+  private void sendNotification(Set<Long> roomIds, Map<String, Object> root, String event) {
     if(myConfig.isPaused()){
       LOG.debug("Skip sending message. Notifier is disabled.");
       return;
@@ -124,7 +130,7 @@ public class VSONotificator extends NotificatorAdapter {
     final String message = map.get("message");
 
     final VSOTeamRoomsAPIConnection connection = getApiConnection();
-    for (String roomId : roomIds){
+    for (Long roomId : roomIds){
       try{
         connection.sendMessageToRoom(myConfig.getAccount(), roomId, message);
       } catch (Exception ex){
@@ -134,6 +140,6 @@ public class VSONotificator extends NotificatorAdapter {
   }
 
   private VSOTeamRoomsAPIConnection getApiConnection() {
-    return VSOTeamRoomsAPI.connect(myConfig.getUser(), myConfig.getPassword());
+    return VSOTeamRoomsAPI.createConnection(myConfig.getUser(), myConfig.getPassword());
   }
 }

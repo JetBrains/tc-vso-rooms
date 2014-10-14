@@ -28,13 +28,13 @@ public class VSOTeamRoomsAPI {
   private static final Logger LOG = Logger.getLogger(VSOTeamRoomsAPI.class);
 
   @NotNull
-  public static VSOTeamRoomsAPIConnection connect(@NotNull String user, @NotNull String password){
+  public static VSOTeamRoomsAPIConnection createConnection(@NotNull String user, @NotNull String password){
     return new VSOTeamRoomsAPIConnection(user, password);
   }
 
   @Nullable
   public static String testConnection(@NotNull String account, @NotNull String username, @NotNull String password) {
-    final VSOTeamRoomsAPIConnection apiConnection = connect(username, password);
+    final VSOTeamRoomsAPIConnection apiConnection = createConnection(username, password);
     try{
       if(apiConnection.getListOfRooms(account).isEmpty())
         return String.format("Found no team rooms for account %s", account);

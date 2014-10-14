@@ -52,7 +52,7 @@ public class VSOTeamRoomsAPIConnection {
   }
 
   @Nullable
-  public TeamRoomMessage sendMessageToRoom(@NotNull String account, @NotNull String roomId, @NotNull String messageContent){
+  public TeamRoomMessage sendMessageToRoom(@NotNull String account, @NotNull Long roomId, @NotNull String messageContent){
     final HttpHeaders requestHeaders = getRequestHeaders();
     requestHeaders.setContentType(MediaType.APPLICATION_JSON);
     final HttpEntity<String> request = new HttpEntity<String>(getMessageBody(messageContent), requestHeaders);
@@ -85,8 +85,8 @@ public class VSOTeamRoomsAPIConnection {
     return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms", account);
   }
 
-  private String getRoomMessagesUrl(String account, String roomId) {
-    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%s/messages", account, roomId);
+  private String getRoomMessagesUrl(String account, Long roomId) {
+    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%d/messages", account, roomId);
   }
 
   private String getMessageBody(String messageContent) {
