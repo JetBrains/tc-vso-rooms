@@ -151,9 +151,7 @@ public class VSONotificatorConfig implements ChangeListener {
       }
     }
     final Attribute attribute = rootElement.getAttribute(PAUSED);
-    if (attribute != null) {
-      myPaused = true;
-    }
+    myPaused = attribute == null || Boolean.parseBoolean(attribute.getValue());
   }
 
   private Document parseFile(File configFile) {
