@@ -3,9 +3,10 @@
 <#import "common.ftl" as common>
 <#import "responsibility.ftl" as resp>
 
-<#global message>You are assigned for investigation of a build configuration failure.
+<#global message>
+${responsibility.responsibleUser.descriptiveName} is assigned for investigation of a build configuration failure.
 ${project.fullName}::${buildType.name}, assigned by ${responsibility.reporterUser.descriptiveName}
-
 <@resp.removeMethod responsibility/>
 <@resp.comment responsibility/>
-${link.buildTypeConfigLink}</#global>
+${link.buildTypeConfigLink}
+</#global>
