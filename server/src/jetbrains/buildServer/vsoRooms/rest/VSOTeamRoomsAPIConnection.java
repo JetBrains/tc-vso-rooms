@@ -82,11 +82,11 @@ public class VSOTeamRoomsAPIConnection {
   }
 
   private String getListOfRoomsUrl(String account) {
-    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms", account);
+    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms?api-version=1.0", account);
   }
 
   private String getRoomMessagesUrl(String account, Long roomId) {
-    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%d/messages", account, roomId);
+    return String.format("https://%s.visualstudio.com/defaultcollection/_apis/chat/rooms/%d/messages?api-version=1.0", account, roomId);
   }
 
   private String getMessageBody(String messageContent) {
