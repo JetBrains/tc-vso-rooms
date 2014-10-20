@@ -29,15 +29,15 @@ import java.util.Map;
 /**
  * @author Evgeniy.Koshkin
  */
-public class VSOTeamRooms {
+public class VSOTeamRoomIdsCache {
 
-  private static final Logger LOG = Logger.getLogger(VSOTeamRooms.class);
+  private static final Logger LOG = Logger.getLogger(VSOTeamRoomIdsCache.class);
 
   private final Map<String, Long> myNameToIdMap = new HashMap<String, Long>();
   private final VSOTeamRoomsAPIConnection myAPIConnection;
   private final VSONotificatorConfig myConfig;
 
-  public VSOTeamRooms(@NotNull final VSONotificatorConfigHolder configHolder) {
+  public VSOTeamRoomIdsCache(@NotNull final VSONotificatorConfigHolder configHolder) {
     myConfig = configHolder.getConfig();
     myAPIConnection = VSOTeamRoomsAPI.createConnection(myConfig.getUser(), myConfig.getPassword());
   }

@@ -16,6 +16,7 @@
 
 package jetbrains.buildServer.vsoRooms.notificator;
 
+import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.ServerPaths;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,12 @@ public class VSONotificatorConfigHolder {
 
   public VSONotificatorConfigHolder(@NotNull ServerPaths serverPaths, @NotNull SBuildServer server) throws IOException {
     myConfig = new VSONotificatorConfig(serverPaths, server);
+    server.addListener(new BuildServerAdapter() {
+      @Override
+      public void serverShutdown() {
+        myConfig.dispose();
+      }
+    });
   }
 
   @NotNull

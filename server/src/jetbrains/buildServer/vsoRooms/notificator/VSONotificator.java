@@ -21,9 +21,12 @@ import jetbrains.buildServer.notification.FreeMarkerHelper;
 import jetbrains.buildServer.notification.NotificatorAdapter;
 import jetbrains.buildServer.notification.NotificatorRegistry;
 import jetbrains.buildServer.notification.TemplateMessageBuilder;
-import jetbrains.buildServer.serverSide.*;
-import jetbrains.buildServer.users.NotificatorPropertyKey;
+import jetbrains.buildServer.responsibility.ResponsibilityEntry;
+import jetbrains.buildServer.serverSide.SBuildType;
+import jetbrains.buildServer.serverSide.SRunningBuild;
+import jetbrains.buildServer.serverSide.UserPropertyInfo;
 import jetbrains.buildServer.users.SUser;
+import jetbrains.buildServer.users.User;
 import jetbrains.buildServer.vsoRooms.Constants;
 import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
 import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPIConnection;
@@ -45,26 +48,20 @@ public class VSONotificator extends NotificatorAdapter {
   private final static List<UserPropertyInfo> USER_PROPERTIES = new ArrayList<UserPropertyInfo>();
   static {
     USER_PROPERTIES.add(new UserPropertyInfo(Constants.VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME, "Team room name"));
+    USER_PROPERTIES.add(new UserPropertyInfo(Constants.VSO_USER_NAME_USER_PROPERTY_NAME, "VSO Account"));
   }
 
   private final TemplateMessageBuilder myMessageBuilder;
   private final VSONotificatorConfig myConfig;
-  private VSOTeamRooms myTeamRooms;
+  private final VSOTeamRoomIdsCache myTeamRoomIdsCache;
 
-  public VSONotificator(@NotNull NotificatorRegistry registry,
-                        @NotNull TemplateMessageBuilder builder,
-                        @NotNull SBuildServer server,
-                        @NotNull VSONotificatorConfigHolder configHolder,
-                        @NotNull VSOTeamRooms teamRooms) throws IOException {
+  public VSONotificator(@NotNull final NotificatorRegistry registry,
+                        @NotNull final TemplateMessageBuilder builder,
+                        @NotNull final VSONotificatorConfigHolder configHolder,
+                        @NotNull final VSOTeamRoomIdsCache teamRoomIdsCache) throws IOException {
     myMessageBuilder = builder;
-    myTeamRooms = teamRooms;
+    myTeamRoomIdsCache = teamRoomIdsCache;
     myConfig = configHolder.getConfig();
-    server.addListener(new BuildServerAdapter() {
-      @Override
-      public void serverShutdown() {
-        myConfig.dispose();
-      }
-    });
     registry.register(this, USER_PROPERTIES);
   }
 
@@ -88,22 +85,18 @@ public class VSONotificator extends NotificatorAdapter {
   @Override
   public void notifyResponsibleAssigned(@NotNull SBuildType buildType, @NotNull Set<SUser> users) {
     final Map<String, Object> root = myMessageBuilder.getBuildTypeResponsibilityAssignedMap(buildType, users);
+    final ResponsibilityEntry responsibility = (ResponsibilityEntry) root.get("responsibility");
+    root.put("responsibleUser", getUserName(responsibility.getResponsibleUser()));
+    root.put("reporterUser", getUserName(responsibility.getReporterUser()));
     sendNotification(getTargetRoomIds(users), root, BUILD_TYPE_RESPONSIBILITY_ASSIGNED_TO_ME);
   }
 
-  private Set<Long> getTargetRoomIds(Set<SUser> users) {
-    final NotificatorPropertyKey key = new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, Constants.VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME);
-    final Set<Long> roomIds = new HashSet<Long>();
-    for (SUser user : users){
-      final String roomName = user.getPropertyValue(key);
-      if (roomName != null) {
-        final Long roomId = myTeamRooms.getOrResolveRoomId(roomName);
-        if(roomId != null){
-          roomIds.add(roomId);
-        }
-      }
+  private String getUserName(User user) {
+    final String vsoUserName = UserPropertiesUtil.getVSOUserName(user);
+    if(vsoUserName != null){
+      return "@" + vsoUserName;
     }
-    return roomIds;
+    return user.getDescriptiveName();
   }
 
   private void sendNotification(Set<Long> roomIds, Map<String, Object> root, String event) {
@@ -141,5 +134,19 @@ public class VSONotificator extends NotificatorAdapter {
 
   private VSOTeamRoomsAPIConnection getApiConnection() {
     return VSOTeamRoomsAPI.createConnection(myConfig.getUser(), myConfig.getPassword());
+  }
+
+  private Set<Long> getTargetRoomIds(Set<SUser> users) {
+    final Set<Long> roomIds = new HashSet<Long>();
+    for (SUser user : users){
+      final String roomName = UserPropertiesUtil.getVSOTeamRoomName(user);
+      if (roomName != null) {
+        final Long roomId = myTeamRoomIdsCache.getOrResolveRoomId(roomName);
+        if(roomId != null){
+          roomIds.add(roomId);
+        }
+      }
+    }
+    return roomIds;
   }
 }
