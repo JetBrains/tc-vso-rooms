@@ -4,7 +4,7 @@
 <#import "responsibility.ftl" as resp>
 
 <#global message>${responsibleUser} is assigned for investigation of a test failure.
-${testName} (${project.fullName}), assigned by ${responsibility.reporterUser.descriptiveName}
+${testName} (${project.fullName}), assigned by ${reporterUser}
 
 <@resp.removeMethod responsibility/>
 <@resp.comment responsibility/>
