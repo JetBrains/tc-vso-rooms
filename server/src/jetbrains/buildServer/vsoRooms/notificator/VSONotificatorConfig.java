@@ -63,8 +63,9 @@ public class VSONotificatorConfig implements ChangeListener {
     configDir.mkdirs();
     myConfigFile = new File(configDir, Constants.CONFIG_FILENAME);
     FileUtil.copyResourceIfNotExists(getClass(), "/message_templates/" + Constants.CONFIG_FILENAME, myConfigFile);
-
     reloadConfiguration();
+
+    copyMessageTemplates(configDir);
 
     myChangeObserver = new FileWatcher(myConfigFile);
     myChangeObserver.setSleepingPeriod(10000);
@@ -132,6 +133,35 @@ public class VSONotificatorConfig implements ChangeListener {
         });
       }
     });
+  }
+
+  private void copyMessageTemplates(File targetDirectory) {
+    copyResourceWithDist("common.ftl", targetDirectory);
+    copyResourceWithDist("responsibility.ftl", targetDirectory);
+    copyResourceWithDist("build_failed.ftl", targetDirectory);
+    copyResourceWithDist("build_failed_to_start.ftl", targetDirectory);
+    copyResourceWithDist("build_failing.ftl", targetDirectory);
+    copyResourceWithDist("build_probably_hanging.ftl", targetDirectory);
+    copyResourceWithDist("build_started.ftl", targetDirectory);
+    copyResourceWithDist("build_successful.ftl", targetDirectory);
+    copyResourceWithDist("labeling_failed.ftl", targetDirectory);
+    copyResourceWithDist("build_type_responsibility_assigned.ftl", targetDirectory);
+    copyResourceWithDist("build_type_responsibility_changed.ftl", targetDirectory);
+    copyResourceWithDist("test_responsibility_assigned.ftl", targetDirectory);
+    copyResourceWithDist("test_responsibility_changed.ftl", targetDirectory);
+    copyResourceWithDist("multiple_test_responsibility_assigned.ftl", targetDirectory);
+    copyResourceWithDist("multiple_test_responsibility_changed.ftl", targetDirectory);
+    copyResourceWithDist("mute.ftl", targetDirectory);
+    copyResourceWithDist("tests_muted.ftl", targetDirectory);
+    copyResourceWithDist("tests_unmuted.ftl", targetDirectory);
+    copyResourceWithDist("build_problem_responsibility_assigned.ftl", targetDirectory);
+    copyResourceWithDist("build_problem_responsibility_changed.ftl", targetDirectory);
+    copyResourceWithDist("build_problems_muted.ftl", targetDirectory);
+    copyResourceWithDist("build_problems_unmuted.ftl", targetDirectory);
+  }
+
+  private void copyResourceWithDist(@NotNull String name, @NotNull File targetDirectory) {
+    FileUtil.copyResourceWithDist(getClass(), "/message_templates/" + name, new File(targetDirectory, name));
   }
 
   private synchronized void reloadConfiguration() {
