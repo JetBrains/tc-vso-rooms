@@ -59,7 +59,7 @@
         <tr>
           <th><label for="account">Account: <l:star/></label></th>
           <td>
-            <forms:textField name="account" value="${vsoRoomsSettings.account}"/>
+            <forms:textField name="account" value="${vsoRoomsSettings.account}" /> .VISUALSTUDIO.COM
             <span class="error" id="errorAccount"></span>
           </td>
         </tr>
@@ -75,6 +75,12 @@
           <td>
             <forms:passwordField name="password" encryptedPassword="${vsoRoomsSettings.encryptedPassword}"/>
             <span class="error" id="errorPassword"></span>
+          </td>
+        </tr>
+        <tr class="noBorder">
+          <td colspan="2">
+            The templates for Visual Studio Online notifications
+            <a target="_blank" href="<bs:helpUrlPrefix/>/Customizing+Notifications" showdiscardchangesmessage="false">can be customized</a>.
           </td>
         </tr>
       </table>
