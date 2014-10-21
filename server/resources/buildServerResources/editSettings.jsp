@@ -60,6 +60,9 @@
           <th><label for="account">Account: <l:star/></label></th>
           <td>
             <forms:textField name="account" value="${vsoRoomsSettings.account}" /> .VISUALSTUDIO.COM
+            <span class="smallNote">
+              <a target="_blank" href="http://www.visualstudio.com/en-us/integrate/get-started/get-started-auth-introduction-vsi" showdiscardchangesmessage="false">Alternate Authentication Credentials</a> should be enabled for this account.
+            </span>
             <span class="error" id="errorAccount"></span>
           </td>
         </tr>
@@ -79,8 +82,7 @@
         </tr>
         <tr class="noBorder">
           <td colspan="2">
-            The templates for Visual Studio Online notifications
-            <a target="_blank" href="<bs:helpUrlPrefix/>/Customizing+Notifications" showdiscardchangesmessage="false">can be customized</a>.
+            The templates for Visual Studio Online notifications <a target="_blank" href="<bs:helpUrlPrefix/>/Customizing+Notifications" showdiscardchangesmessage="false">can be customized</a>.
           </td>
         </tr>
       </table>
