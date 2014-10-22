@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="vso-rooms tests">
+  <test name="vso-rooms tests">
+    <classes>
+      <class name="VSOAPIIntegrationTest"/>
+    </classes>
+  </test>
+</suite>
+
