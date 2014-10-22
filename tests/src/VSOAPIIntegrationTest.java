@@ -65,4 +65,9 @@ public class VSOAPIIntegrationTest extends BaseTestCase {
       log(room.getName() + " " + room.getId());
     }
   }
+
+  @Test
+  public void testGetListOfRoomsOnBehalfOfUnknownUser() throws Exception {
+    assertEmpty(VSOTeamRoomsAPI.createConnection("unknown_user", "some_password").getListOfRooms(myAccount));
+  }
 }
