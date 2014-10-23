@@ -77,12 +77,14 @@ public class UserVSONotificationSettingsExtension extends SimplePageExtension {
       if (user == null) throw new UserNotFoundException(userId, "User with id " + userIdStr + " does not exist");
     }
 
-    boolean showNotConfiguredWarning = false;
+    boolean showTeamRoomNotConfiguredWarning = false;
+    boolean showCredentialsNotConfiguredWarning = false;
     if (myRulesManager.isRulesWithEventsConfigured(user.getId(), getPluginName())) {
-      showNotConfiguredWarning = !VSOUserProperties.isTargetTeamRoomConfigured(user);
+      showTeamRoomNotConfiguredWarning = !VSOUserProperties.isTargetTeamRoomConfigured(user);
+      showCredentialsNotConfiguredWarning = !VSOUserProperties.isCredentialsConfigured(user);
     }
-
-    model.put("showNotConfiguredWarning", showNotConfiguredWarning);
+    model.put("showTeamRoomNotConfiguredWarning", showTeamRoomNotConfiguredWarning);
+    model.put("showCredentialsNotConfiguredWarning", showCredentialsNotConfiguredWarning);
     model.put("showPausedWarning", myConfig.isPaused());
   }
 }
