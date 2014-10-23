@@ -2,6 +2,8 @@
 <suite name="vso-rooms tests">
   <test name="vso-rooms tests">
     <classes>
+      <class name="VSOMessageSenderTest"/>
+      <class name="VSOTeamRoomIdsCacheTest"/>
       <class name="VSOAPIIntegrationTest"/>
     </classes>
   </test>

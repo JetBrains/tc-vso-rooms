@@ -17,7 +17,6 @@
 package jetbrains.buildServer.vsoRooms.notificator;
 
 import jetbrains.buildServer.vsoRooms.rest.TeamRoom;
-import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
 import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPIConnection;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -34,31 +33,23 @@ public class VSOTeamRoomIdsCache {
   private static final Logger LOG = Logger.getLogger(VSOTeamRoomIdsCache.class);
 
   private final Map<String, Long> myNameToIdMap = new HashMap<String, Long>();
-  private final VSOTeamRoomsAPIConnection myAPIConnection;
-  private final VSONotificatorConfig myConfig;
-
-  public VSOTeamRoomIdsCache(@NotNull final VSONotificatorConfigHolder configHolder) {
-    myConfig = configHolder.getConfig();
-    myAPIConnection = VSOTeamRoomsAPI.createConnection(myConfig.getUser(), myConfig.getPassword());
-  }
 
   @Nullable
-  public Long getOrResolveRoomId(@NotNull String roomName) {
-    final String roomNameToLowerCase = roomName.toLowerCase();
+  public Long getOrResolveRoomId(@NotNull String vsoAccount, @NotNull String teamRoomName, @NotNull VSOTeamRoomsAPIConnection apiConnection) {
+    final String roomNameToLowerCase = teamRoomName.toLowerCase();
     if(!myNameToIdMap.containsKey(roomNameToLowerCase)){
       synchronized (myNameToIdMap){
         if(!myNameToIdMap.containsKey(roomNameToLowerCase)){
-          final String account = myConfig.getAccount();
-          LOG.debug(String.format("Team room ID for room name %s is not resolved yet. Calling VSO API to list all Team Rooms for account %s", roomNameToLowerCase, account));
+          LOG.debug(String.format("Team room ID for room name %s is not resolved yet. Calling VSO API to list all Team Rooms for account %s", roomNameToLowerCase, vsoAccount));
           try {
-            for (TeamRoom teamRoom : myAPIConnection.getListOfRooms(account)) {
+            for (TeamRoom teamRoom : apiConnection.getListOfRooms(vsoAccount)) {
               final String resolvedRoomName = teamRoom.getName().toLowerCase();
               if(!myNameToIdMap.containsKey(resolvedRoomName)){
                 myNameToIdMap.put(resolvedRoomName, teamRoom.getId());
               }
             }
           } catch (Exception e) {
-            LOG.warn("Failed to list team rooms for account " + account, e);
+            LOG.warn("Failed to list team rooms for account " + vsoAccount, e);
           }
         }
       }

@@ -17,13 +17,13 @@
 package jetbrains.buildServer.vsoRooms.controllers;
 
 import jetbrains.buildServer.notification.NotificationRulesManager;
-import jetbrains.buildServer.users.NotificatorPropertyKey;
 import jetbrains.buildServer.users.User;
 import jetbrains.buildServer.users.UserModel;
 import jetbrains.buildServer.users.UserNotFoundException;
 import jetbrains.buildServer.vsoRooms.Constants;
 import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfig;
 import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfigHolder;
+import jetbrains.buildServer.vsoRooms.notificator.VSOUserProperties;
 import jetbrains.buildServer.web.openapi.PlaceId;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.SimplePageExtension;
@@ -79,8 +79,7 @@ public class UserVSONotificationSettingsExtension extends SimplePageExtension {
 
     boolean showNotConfiguredWarning = false;
     if (myRulesManager.isRulesWithEventsConfigured(user.getId(), getPluginName())) {
-      final String teamRoomName = user.getPropertyValue(new NotificatorPropertyKey(getPluginName(), Constants.VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME));
-      showNotConfiguredWarning = teamRoomName == null || teamRoomName.isEmpty();
+      showNotConfiguredWarning = !VSOUserProperties.isTargetTeamRoomConfigured(user);
     }
 
     model.put("showNotConfiguredWarning", showNotConfiguredWarning);

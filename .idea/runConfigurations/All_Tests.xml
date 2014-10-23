@@ -4,7 +4,7 @@
     <module name="tests" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
-    <option name="SUITE_NAME" value="$PROJECT_DIR$/tests/testng-integration.xml" />
+    <option name="SUITE_NAME" value="$PROJECT_DIR$/tests/testng-all.xml" />
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
@@ -25,6 +25,9 @@
     <envs />
     <properties />
     <listeners />
+    <RunnerSettings RunnerId="Profile ">
+      <option name="myExternalizedOptions" value="&#13;&#10;additional-options2=onexit\=snapshot&#13;&#10;" />
+    </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Run" />
     <method />

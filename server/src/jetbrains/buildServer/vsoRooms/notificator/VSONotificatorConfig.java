@@ -43,6 +43,7 @@ import java.io.IOException;
 public class VSONotificatorConfig implements ChangeListener {
 
   private static final Logger LOG = Logger.getLogger(VSONotificatorConfig.class);
+  private static final String CONFIG_FILENAME = "vso-rooms-notifier-config.xml";
 
   private static final String ACCOUNT = "account";
   private static final String USER = "user";
@@ -61,8 +62,8 @@ public class VSONotificatorConfig implements ChangeListener {
   public VSONotificatorConfig(@NotNull ServerPaths serverPaths, @NotNull SBuildServer server) throws IOException {
     final File configDir = new File(serverPaths.getConfigDir(), FreeMarkerHelper.TEMPLATES_ROOT + "/" + Constants.NOTIFICATOR_TYPE);
     configDir.mkdirs();
-    myConfigFile = new File(configDir, Constants.CONFIG_FILENAME);
-    FileUtil.copyResourceIfNotExists(getClass(), "/message_templates/" + Constants.CONFIG_FILENAME, myConfigFile);
+    myConfigFile = new File(configDir, CONFIG_FILENAME);
+    FileUtil.copyResourceIfNotExists(getClass(), "/message_templates/" + CONFIG_FILENAME, myConfigFile);
     reloadConfiguration();
 
     copyMessageTemplates(configDir);

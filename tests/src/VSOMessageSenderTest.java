@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package jetbrains.buildServer.vsoRooms;
+import jetbrains.buildServer.BaseTestCase;
+import org.testng.annotations.Test;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class Constants {
-  public static final String NOTIFICATOR_TYPE = "vso-rooms";
+public class VSOMessageSenderTest extends BaseTestCase {
+  @Test
+  public void should_merge_messages_sent_to_the_same_room() throws Exception {
+    fail();
+  }
 }

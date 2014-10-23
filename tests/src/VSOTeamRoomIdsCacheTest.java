@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
-package jetbrains.buildServer.vsoRooms;
+import jetbrains.buildServer.BaseTestCase;
+import org.testng.annotations.Test;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class Constants {
-  public static final String NOTIFICATOR_TYPE = "vso-rooms";
+public class VSOTeamRoomIdsCacheTest extends BaseTestCase {
+  @Test
+  public void test_room_names_collision_in_two_accounts() throws Exception {
+    fail();
+  }
+
+  @Test
+  public void should_be_case_insensitive_for_team_room_name() throws Exception {
+    fail();
+  }
+
+  @Test
+  public void should_be_case_insensitive_for_account() throws Exception {
+    fail();
+  }
 }
