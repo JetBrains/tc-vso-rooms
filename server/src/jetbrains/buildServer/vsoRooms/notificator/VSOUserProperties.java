@@ -40,10 +40,10 @@ public class VSOUserProperties {
   public final static List<UserPropertyInfo> USER_PROPERTIES = new ArrayList<UserPropertyInfo>();
   static {
     USER_PROPERTIES.add(new UserPropertyInfo(VSO_ACCOUNT_USER_PROPERTY_NAME, "Target Account"));
-    USER_PROPERTIES.add(new UserPropertyInfo(VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME, "Target Team room name"));
+    USER_PROPERTIES.add(new UserPropertyInfo(VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME, "Target Team Room Name"));
     USER_PROPERTIES.add(new UserPropertyInfo(VSO_USERNAME_USER_PROPERTY_NAME, "My Username"));
     USER_PROPERTIES.add(new UserPropertyInfo(VSO_PASSWORD_USER_PROPERTY_NAME, "My Password"));
-    USER_PROPERTIES.add(new UserPropertyInfo(VSO_USER_DISPLAY_NAME_USER_PROPERTY_NAME, " My User display name (optional)"));
+    USER_PROPERTIES.add(new UserPropertyInfo(VSO_USER_DISPLAY_NAME_USER_PROPERTY_NAME, " My User Display Name (optional)"));
   }
 
   private static final NotificatorPropertyKey ourVSOAccountUserPropKey = new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, VSO_ACCOUNT_USER_PROPERTY_NAME);
