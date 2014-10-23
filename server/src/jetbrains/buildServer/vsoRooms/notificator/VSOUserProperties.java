@@ -41,9 +41,9 @@ public class VSOUserProperties {
   static {
     USER_PROPERTIES.add(new UserPropertyInfo(VSO_ACCOUNT_USER_PROPERTY_NAME, "Account"));
     USER_PROPERTIES.add(new UserPropertyInfo(VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME, "Team room name"));
-    USER_PROPERTIES.add(new UserPropertyInfo(VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME, "Username"));
-    USER_PROPERTIES.add(new UserPropertyInfo(VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME, "Password"));
-    USER_PROPERTIES.add(new UserPropertyInfo(VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME, "User display name"));
+    USER_PROPERTIES.add(new UserPropertyInfo(VSO_USERNAME_USER_PROPERTY_NAME, "Username"));
+    USER_PROPERTIES.add(new UserPropertyInfo(VSO_PASSWORD_USER_PROPERTY_NAME, "Password"));
+    USER_PROPERTIES.add(new UserPropertyInfo(VSO_USER_DISPLAY_NAME_USER_PROPERTY_NAME, "User display name (optional)"));
   }
 
   private static final NotificatorPropertyKey ourVSOAccountUserPropKey = new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, VSO_ACCOUNT_USER_PROPERTY_NAME);
@@ -81,5 +81,11 @@ public class VSOUserProperties {
     final String vsoAccount = user.getPropertyValue(new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, VSO_ACCOUNT_USER_PROPERTY_NAME));
     final String teamRoomName = user.getPropertyValue(new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, VSO_TEAM_ROOM_NAME_USER_PROPERTY_NAME));
     return vsoAccount != null && !vsoAccount.isEmpty() && teamRoomName != null && !teamRoomName.isEmpty();
+  }
+
+  public static boolean isCredentialsConfigured(@NotNull User user) {
+    final String userName = user.getPropertyValue(new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, VSO_USERNAME_USER_PROPERTY_NAME));
+    final String password = user.getPropertyValue(new NotificatorPropertyKey(Constants.NOTIFICATOR_TYPE, VSO_PASSWORD_USER_PROPERTY_NAME));
+    return userName != null && !userName.isEmpty() && password != null && !password.isEmpty();
   }
 }
