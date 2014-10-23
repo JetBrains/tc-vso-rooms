@@ -24,7 +24,6 @@ import jetbrains.buildServer.configuration.FileWatcher;
 import jetbrains.buildServer.notification.FreeMarkerHelper;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.ServerPaths;
-import jetbrains.buildServer.serverSide.crypt.EncryptUtil;
 import jetbrains.buildServer.util.FileUtil;
 import jetbrains.buildServer.vsoRooms.Constants;
 import org.apache.log4j.Logger;
@@ -45,18 +44,12 @@ public class VSONotificatorConfig implements ChangeListener {
   private static final Logger LOG = Logger.getLogger(VSONotificatorConfig.class);
   private static final String CONFIG_FILENAME = "vso-rooms-notifier-config.xml";
 
-  private static final String ACCOUNT = "account";
-  private static final String USER = "user";
-  private static final String PASSWORD = "password";
   private static final String PAUSED = "paused";
 
   private final File myConfigFile;
   private final FileWatcher myChangeObserver;
   private final Configuration myConfiguration;
 
-  private String myAccount;
-  private String myUser;
-  private String myPassword;
   private boolean myPaused;
 
   public VSONotificatorConfig(@NotNull ServerPaths serverPaths, @NotNull SBuildServer server) throws IOException {
@@ -92,30 +85,6 @@ public class VSONotificatorConfig implements ChangeListener {
     myPaused = paused;
   }
 
-  public String getAccount() {
-    return myAccount;
-  }
-
-  public String getUser() {
-    return myUser;
-  }
-
-  public String getPassword() {
-    return myPassword;
-  }
-
-  public void setAccount(String account) {
-    myAccount = account;
-  }
-
-  public void setUser(String user) {
-    myUser = user;
-  }
-
-  public void setPassword(String password) {
-    myPassword = password;
-  }
-
   public Template getTemplate(@NotNull String name) throws IOException {
     return myConfiguration.getTemplate("/" + Constants.NOTIFICATOR_TYPE + "/" + name + ".ftl");
   }
@@ -125,10 +94,6 @@ public class VSONotificatorConfig implements ChangeListener {
       public void run() {
         FileUtil.processXmlFile(myConfigFile, new FileUtil.Processor() {
           public void process(Element rootElement) {
-            rootElement.setAttribute(ACCOUNT, myAccount);
-            rootElement.setAttribute(USER, myUser);
-            String pass = myPassword != null ? EncryptUtil.scramble(myPassword) : null;
-            rootElement.setAttribute(PASSWORD, pass);
             rootElement.setAttribute(PAUSED, Boolean.toString(myPaused));
           }
         });
@@ -169,19 +134,7 @@ public class VSONotificatorConfig implements ChangeListener {
     LOG.info("Loading configuration file: " + myConfigFile.getAbsolutePath());
     Document document = parseFile(myConfigFile);
     if(document == null) return;
-    final Element rootElement = document.getRootElement();
-    myAccount = rootElement.getAttributeValue(ACCOUNT);
-    myUser  = rootElement.getAttributeValue(USER);
-    final String passwordAttr = rootElement.getAttributeValue(PASSWORD);
-    myPassword = null;
-    if (passwordAttr != null) {
-      try {
-        myPassword = EncryptUtil.unscramble(passwordAttr);
-      } catch (Throwable e) {
-        myPassword = passwordAttr;
-      }
-    }
-    final Attribute attribute = rootElement.getAttribute(PAUSED);
+    final Attribute attribute = document.getRootElement().getAttribute(PAUSED);
     myPaused = attribute == null || Boolean.parseBoolean(attribute.getValue());
   }
 

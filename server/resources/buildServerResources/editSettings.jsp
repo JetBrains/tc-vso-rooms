@@ -28,17 +28,10 @@
 
 <jsp:useBean id="vsoRoomsSettings" scope="request" type="jetbrains.buildServer.vsoRooms.controllers.VSONotificatorSettingsBean"/>
 
-<script type="text/javascript">
-  document.observe("dom:loaded", function() {
-    VSOTeamRooms.SettingsForm.setupEventHandlers();
-    $('account').focus();
-  });
-</script>
-
 <c:url value="/vso/notificatorSettings.html?edit=1" var="url"/>
 
 <div id="settingsContainer">
-  <form action="${url}" method="post" onsubmit="return VSOTeamRooms.SettingsForm.submitSettings()" autocomplete="off">
+  <form action="${url}" method="post" autocomplete="off">
     <div class="editNotificatorSettingsPage">
       <c:choose>
         <c:when test="${vsoRoomsSettings.paused}">
@@ -53,58 +46,23 @@
         </c:otherwise>
       </c:choose>
 
-      <bs:messages key="settingsSaved"/>
-
       <table class="runnerFormTable">
-        <tr>
-          <th><label for="account">Account: <l:star/></label></th>
+        <tr class="noBorder">
           <td>
-            <forms:textField name="account" value="${vsoRoomsSettings.account}" /> .VISUALSTUDIO.COM
-            <span class="smallNote">
-              <a target="_blank" href="http://www.visualstudio.com/en-us/integrate/get-started/get-started-auth-introduction-vsi" showdiscardchangesmessage="false">Alternate Authentication Credentials</a> should be enabled for this account.
-            </span>
-            <span class="error" id="errorAccount"></span>
-          </td>
-        </tr>
-        <tr>
-          <th><label for="username">Username: <l:star/></label></th>
-          <td>
-            <forms:textField name="username" value="${vsoRoomsSettings.username}"/>
-            <span class="error" id="errorUsername"></span>
-          </td>
-        </tr>
-        <tr>
-          <th><label for="password">Password: <l:star/></label></th>
-          <td>
-            <forms:passwordField name="password" encryptedPassword="${vsoRoomsSettings.encryptedPassword}"/>
-            <span class="error" id="errorPassword"></span>
+            <b>100500</b> users configured notification rules.
           </td>
         </tr>
         <tr class="noBorder">
-          <td colspan="2">
+          <td>
             The templates for Visual Studio Online notifications <a target="_blank" href="<bs:helpUrlPrefix/>/Customizing+Notifications" showdiscardchangesmessage="false">can be customized</a>.
           </td>
         </tr>
       </table>
 
-      <div class="saveButtonsBlock">
-        <forms:submit label="Save"/>
-        <forms:submit id="testConnection" type="button" label="Test connection"/>
-        <input type="hidden" id="submitSettings" name="submitSettings" value="store"/>
-        <input type="hidden" id="publicKey" name="publicKey" value="<c:out value='${vsoRoomsSettings.hexEncodedPublicKey}'/>"/>
-        <forms:saving/>
-      </div>
-
     </div>
 
   </form>
 </div>
-
-<bs:dialog dialogId="testConnectionDialog" title="Test Connection" closeCommand="BS.TestConnectionDialog.close();"
-           closeAttrs="showdiscardchangesmessage='false'">
-  <div id="testConnectionStatus"></div>
-  <div id="testConnectionDetails" class="mono"></div>
-</bs:dialog>
 
 <forms:modified/>
 

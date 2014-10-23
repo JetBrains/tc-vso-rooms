@@ -20,7 +20,6 @@ import jetbrains.buildServer.controllers.ActionErrors;
 import jetbrains.buildServer.controllers.admin.NotifierSettingsTab;
 import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfig;
 import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfigHolder;
-import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
 import org.jetbrains.annotations.NotNull;
@@ -52,34 +51,21 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
 
   @Override
   protected VSONotificatorSettingsBean createSettingsBean(HttpServletRequest httpServletRequest) {
-    return new VSONotificatorSettingsBean(myConfig.getAccount(), myConfig.getUser(), myConfig.getPassword(), myConfig.isPaused());
+    return new VSONotificatorSettingsBean(myConfig.isPaused());
   }
 
   @Override
   protected ActionErrors validate(VSONotificatorSettingsBean settingsBean) {
-    final ActionErrors errors = new ActionErrors();
-    if (settingsBean.getAccount() == null || settingsBean.getAccount().trim().length() == 0) {
-      errors.addError("emptyAccount", "Account must not be empty");
-    }
-    if (settingsBean.getUsername() == null || settingsBean.getUsername().trim().length() == 0) {
-      errors.addError("emptyUsername", "Username must not be empty");
-    }
-    if (settingsBean.getPassword() == null || settingsBean.getPassword().trim().length() == 0) {
-      errors.addError("emptyPassword", "Password must not be empty");
-    }
-    return errors;
+    return new ActionErrors();
   }
 
   @Override
   protected String testSettings(VSONotificatorSettingsBean settingsBean, HttpServletRequest httpServletRequest) {
-    return VSOTeamRoomsAPI.testConnection(settingsBean.getAccount(), settingsBean.getUsername(), settingsBean.getPassword());
+    return null;
   }
 
   @Override
   protected void saveSettings(VSONotificatorSettingsBean settingsBean) {
-    myConfig.setAccount(settingsBean.getAccount());
-    myConfig.setUser(settingsBean.getUsername());
-    myConfig.setPassword(settingsBean.getPassword());
     myConfig.save();
   }
 

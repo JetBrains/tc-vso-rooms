@@ -16,24 +16,15 @@
 
 package jetbrains.buildServer.vsoRooms.controllers;
 
-import jetbrains.buildServer.Used;
 import jetbrains.buildServer.controllers.RememberState;
-import jetbrains.buildServer.serverSide.crypt.RSACipher;
-import jetbrains.buildServer.util.StringUtil;
 
 /**
  * @author Evgeniy.Koshkin
  */
 public class VSONotificatorSettingsBean extends RememberState {
-  private String myAccount;
-  private String myUsername;
-  private String myPassword;
   private boolean myPaused;
 
-  public VSONotificatorSettingsBean(String account, String user, String password, boolean paused) {
-    myAccount = account;
-    myUsername = user;
-    myPassword = password;
+  public VSONotificatorSettingsBean(boolean paused) {
     myPaused = paused;
     rememberState();
   }
@@ -44,40 +35,5 @@ public class VSONotificatorSettingsBean extends RememberState {
 
   public void setPaused(boolean paused) {
     myPaused = paused;
-  }
-
-  public String getAccount() {
-    return myAccount;
-  }
-
-  @Used("jsp")
-  public void setAccount(String account) {
-    myAccount = account;
-  }
-
-  public String getUsername() {
-    return myUsername;
-  }
-
-  @Used("jsp")
-  public void setUsername(String username) {
-    myUsername = username;
-  }
-
-  public String getHexEncodedPublicKey() {
-    return RSACipher.getHexEncodedPublicKey();
-  }
-
-  public String getEncryptedPassword() {
-    return StringUtil.isEmpty(myPassword) ? "" : RSACipher.encryptDataForWeb(myPassword);
-  }
-
-  @Used("jsp")
-  public void setEncryptedPassword(final String encrypted) {
-    myPassword = RSACipher.decryptWebRequestData(encrypted);
-  }
-
-  public String getPassword() {
-    return myPassword;
   }
 }
