@@ -18,6 +18,7 @@ package jetbrains.buildServer.vsoRooms.notificator;
 
 import jetbrains.buildServer.serverSide.UserPropertyInfo;
 import jetbrains.buildServer.users.NotificatorPropertyKey;
+import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.users.User;
 import jetbrains.buildServer.vsoRooms.Constants;
 import org.jetbrains.annotations.NotNull;
@@ -57,9 +58,17 @@ public class VSOUserProperties {
     return tcUser.getPropertyValue(ourVSOAccountUserPropKey);
   }
 
+  public static void setAccount(@NotNull final SUser tcUser, @NotNull final String account) {
+    tcUser.setUserProperty(ourVSOAccountUserPropKey, account);
+  }
+
   @Nullable
   public static String getTeamRoomName(@NotNull final User tcUser) {
     return tcUser.getPropertyValue(ourVSOTeamRoomNameUserPropKey);
+  }
+
+  public static void setTeamRoomName(@NotNull final SUser tcUser, @NotNull final String teamRoomName) {
+    tcUser.setUserProperty(ourVSOTeamRoomNameUserPropKey, teamRoomName);
   }
 
   @Nullable
@@ -67,9 +76,17 @@ public class VSOUserProperties {
     return tcUser.getPropertyValue(ourUsernameUserPropKey);
   }
 
+  public static void setUsername(@NotNull final SUser tcUser, @NotNull final String username) {
+    tcUser.setUserProperty(ourUsernameUserPropKey, username);
+  }
+
   @Nullable
   public static String getPassword(@NotNull final User tcUser) {
     return tcUser.getPropertyValue(ourPasswordUserPropKey);
+  }
+
+  public static void setPassword(@NotNull final SUser tcUser, @NotNull final String password) {
+    tcUser.setUserProperty(ourPasswordUserPropKey, password);
   }
 
   @Nullable

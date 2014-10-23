@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package jetbrains.buildServer.vsoRooms.rest;
+package jetbrains.buildServer.vsoRooms.rest.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jetbrains.buildServer.vsoRooms.rest.TeamRoomMessage;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -29,26 +30,25 @@ import java.io.IOException;
 /**
  * @author Evgeniy.Koshkin
  */
-public class JsonTeamRoomListConverter extends AbstractHttpMessageConverter<TeamRoomList> {
+public class JsonTeamRoomMessageConverter extends AbstractHttpMessageConverter<TeamRoomMessage> {
 
   private final ObjectMapper myMapper = new ObjectMapper();
 
-  public JsonTeamRoomListConverter() {
+  public JsonTeamRoomMessageConverter() {
     super(MediaType.APPLICATION_JSON);
   }
 
   @Override
   protected boolean supports(Class<?> aClass) {
-    return TeamRoomList.class.equals(aClass);
+    return TeamRoomMessage.class.equals(aClass);
   }
 
   @Override
-  protected TeamRoomList readInternal(Class<? extends TeamRoomList> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
-    return myMapper.readValue(httpInputMessage.getBody(), TeamRoomList.class);
+  protected TeamRoomMessage readInternal(Class<? extends TeamRoomMessage> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
+    return myMapper.readValue(httpInputMessage.getBody(), TeamRoomMessage.class);
   }
 
   @Override
-  protected void writeInternal(TeamRoomList teamRoomList, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-
+  protected void writeInternal(TeamRoomMessage teamRoomMessage, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
   }
 }

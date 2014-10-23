@@ -27,6 +27,15 @@ public class TeamRoom {
   private String myName;
   private String myDescription;
 
+  public TeamRoom() {
+  }
+
+  public TeamRoom(long id, String name, String description) {
+    myId = id;
+    myName = name;
+    myDescription = description;
+  }
+
   public long getId() {
     return myId;
   }

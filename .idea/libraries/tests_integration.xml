@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="tests-integration">
+    <CLASSES>
+      <root url="jar://$TeamCityDistribution$/devPackage/tests/tests-integration.jar!/" />
+      <root url="jar://$TeamCityDistribution$/devPackage/tests/spring-test.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

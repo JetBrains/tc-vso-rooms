@@ -1,9 +1,7 @@
 import jetbrains.buildServer.BaseTestCase;
 import jetbrains.buildServer.util.FileUtil;
-import jetbrains.buildServer.vsoRooms.rest.TeamRoom;
-import jetbrains.buildServer.vsoRooms.rest.TeamRoomMessage;
-import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPI;
-import jetbrains.buildServer.vsoRooms.rest.VSOTeamRoomsAPIConnection;
+import jetbrains.buildServer.vsoRooms.rest.*;
+import jetbrains.buildServer.vsoRooms.rest.impl.VSOTeamRoomsAPIImpl;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -18,6 +16,7 @@ public class VSOAPIIntegrationTest extends BaseTestCase {
 
   private VSOTeamRoomsAPIConnection myAPIConnection;
   private String myAccount;
+  private VSOTeamRoomsAPI myVSOTeamRoomsAPI;
 
   @Override
   @BeforeMethod
@@ -47,7 +46,8 @@ public class VSOAPIIntegrationTest extends BaseTestCase {
     password = localCredentials.containsKey("TEST_VSO_PASSWORD") ? localCredentials.get("TEST_VSO_PASSWORD") : System.getenv("TC_TEST_VSO_PASSWORD");
     assertNotNull(password);
 
-    myAPIConnection = VSOTeamRoomsAPI.createConnection(username, password);
+    myVSOTeamRoomsAPI = new VSOTeamRoomsAPIImpl();
+    myAPIConnection = myVSOTeamRoomsAPI.createConnection(username, password);
   }
 
   @Test
@@ -68,6 +68,6 @@ public class VSOAPIIntegrationTest extends BaseTestCase {
 
   @Test
   public void testGetListOfRoomsOnBehalfOfUnknownUser() throws Exception {
-    assertEmpty(VSOTeamRoomsAPI.createConnection("unknown_user", "some_password").getListOfRooms(myAccount));
+    assertEmpty(myVSOTeamRoomsAPI.createConnection("unknown_user", "some_password").getListOfRooms(myAccount));
   }
 }

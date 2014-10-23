@@ -14,40 +14,41 @@
  * limitations under the License.
  */
 
-package jetbrains.buildServer.vsoRooms.rest;
+package jetbrains.buildServer.vsoRooms.rest.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.AbstractHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class JsonTeamRoomMessageConverter extends AbstractHttpMessageConverter<TeamRoomMessage> {
+public class StringJsonConverter implements HttpMessageConverter<String> {
 
-  private final ObjectMapper myMapper = new ObjectMapper();
-
-  public JsonTeamRoomMessageConverter() {
-    super(MediaType.APPLICATION_JSON);
+  public boolean canRead(Class<?> aClass, MediaType mediaType) {
+    return false;
   }
 
-  @Override
-  protected boolean supports(Class<?> aClass) {
-    return TeamRoomMessage.class.equals(aClass);
+  public boolean canWrite(Class<?> aClass, MediaType mediaType) {
+    return aClass.equals(String.class) && mediaType.equals(MediaType.APPLICATION_JSON);
   }
 
-  @Override
-  protected TeamRoomMessage readInternal(Class<? extends TeamRoomMessage> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
-    return myMapper.readValue(httpInputMessage.getBody(), TeamRoomMessage.class);
+  public List<MediaType> getSupportedMediaTypes() {
+    return Collections.singletonList(MediaType.APPLICATION_JSON);
   }
 
-  @Override
-  protected void writeInternal(TeamRoomMessage teamRoomMessage, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+  public String read(Class<? extends String> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
+    return "";
+  }
+
+  public void write(String teamRoomMessage, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+    httpOutputMessage.getBody().write(teamRoomMessage.getBytes());
   }
 }

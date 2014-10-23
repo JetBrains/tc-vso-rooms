@@ -32,6 +32,7 @@ import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.users.User;
 import jetbrains.buildServer.vcs.VcsRoot;
 import jetbrains.buildServer.vsoRooms.Constants;
+import jetbrains.buildServer.vsoRooms.rest.impl.VSOTeamRoomsAPIImpl;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,13 +69,14 @@ public class VSONotificator extends NotificatorAdapter {
 
   private final TemplateMessageBuilder myMessageBuilder;
   private final VSONotificatorConfig myConfig;
-  private final VSOMessageSender myMessageSender = new VSOMessageSender();
+  private final VSOMessageSender myMessageSender;
 
   public VSONotificator(@NotNull final NotificatorRegistry registry,
                         @NotNull final TemplateMessageBuilder builder,
                         @NotNull final VSONotificatorConfigHolder configHolder) throws IOException {
     myMessageBuilder = builder;
     myConfig = configHolder.getConfig();
+    myMessageSender = new VSOMessageSender(new VSOTeamRoomsAPIImpl());
     registry.register(this, VSOUserProperties.USER_PROPERTIES);
   }
 
