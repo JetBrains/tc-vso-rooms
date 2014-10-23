@@ -49,7 +49,7 @@
       <table class="runnerFormTable">
         <tr class="noBorder">
           <td>
-            <b>100500</b> users configured notification rules.
+            <b>${vsoRoomsSettings.numberOfAffectedUsers}</b> user<bs:s val="${vsoRoomsSettings.numberOfAffectedUsers}"/> configured notification rules.
           </td>
         </tr>
         <tr class="noBorder">

@@ -23,9 +23,11 @@ import jetbrains.buildServer.controllers.RememberState;
  */
 public class VSONotificatorSettingsBean extends RememberState {
   private boolean myPaused;
+  private final int myNumberOfAffectedUsers;
 
-  public VSONotificatorSettingsBean(boolean paused) {
+  public VSONotificatorSettingsBean(boolean paused, int numberOfAffectedUsers) {
     myPaused = paused;
+    myNumberOfAffectedUsers = numberOfAffectedUsers;
     rememberState();
   }
 
@@ -35,5 +37,9 @@ public class VSONotificatorSettingsBean extends RememberState {
 
   public void setPaused(boolean paused) {
     myPaused = paused;
+  }
+
+  public int getNumberOfAffectedUsers() {
+    return myNumberOfAffectedUsers;
   }
 }

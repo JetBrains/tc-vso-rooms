@@ -18,8 +18,11 @@ package jetbrains.buildServer.vsoRooms.controllers;
 
 import jetbrains.buildServer.controllers.ActionErrors;
 import jetbrains.buildServer.controllers.admin.NotifierSettingsTab;
+import jetbrains.buildServer.users.SUser;
+import jetbrains.buildServer.users.UserModel;
 import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfig;
 import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfigHolder;
+import jetbrains.buildServer.vsoRooms.notificator.VSOUserProperties;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
 import org.jetbrains.annotations.NotNull;
@@ -34,12 +37,15 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
   private static final String SETTINGS_BEAN_KEY = "vsoRoomsSettings";
   private static final String EDIT_SETTINGS_URL = "/vso/notificatorSettings.html";
 
-  private final VSONotificatorConfig myConfig;
+  @NotNull private final VSONotificatorConfig myConfig;
+  @NotNull private final UserModel myUsers;
 
   public VSONotificatorSettingsController(@NotNull PluginDescriptor pluginDescriptor,
                                           @NotNull WebControllerManager webControllerManager,
-                                          @NotNull VSONotificatorConfigHolder configHolder) {
+                                          @NotNull VSONotificatorConfigHolder configHolder,
+                                          @NotNull UserModel users) {
     super(pluginDescriptor, webControllerManager, SETTINGS_BEAN_KEY, "VSO Notifier");
+    myUsers = users;
     myConfig = configHolder.getConfig();
     registerDisableActions();
   }
@@ -51,7 +57,7 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
 
   @Override
   protected VSONotificatorSettingsBean createSettingsBean(HttpServletRequest httpServletRequest) {
-    return new VSONotificatorSettingsBean(myConfig.isPaused());
+    return new VSONotificatorSettingsBean(myConfig.isPaused(), getNumberOfAffectedUsers());
   }
 
   @Override
@@ -66,7 +72,6 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
 
   @Override
   protected void saveSettings(VSONotificatorSettingsBean settingsBean) {
-    myConfig.save();
   }
 
   private void registerDisableActions() {
@@ -82,5 +87,14 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
         myConfig.save();
       }
     });
+  }
+
+  private int getNumberOfAffectedUsers() {
+    int result = 0;
+    for(SUser user : myUsers.getAllUsers().getUsers()){
+      if(VSOUserProperties.isTargetTeamRoomConfigured(user) && VSOUserProperties.isCredentialsConfigured(user))
+        result++;
+    }
+    return result;
   }
 }
