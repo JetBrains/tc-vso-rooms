@@ -20,8 +20,14 @@
 
 VSOTeamRooms = {};
 
-VSOTeamRooms.SettingsForm = OO.extend(BS.AbstractPasswordForm, {
-  setupEventHandlers: function() {
+VSOTeamRooms.UserSettingsForm = OO.extend(BS.AbstractPasswordForm, {
+  submitSettings: function() {
+    console.info("submit settings called");
+    var that = this;
+    $("submitSettings").value = 'store';
+    this.removeUpdateStateHandlers();
+    BS.PasswordFormSaver.save(this, this.formElement().action, OO.extend(BS.ErrorsAwareListener, this.createErrorListener()));
+    return false;
   },
 
   createErrorListener: function() {

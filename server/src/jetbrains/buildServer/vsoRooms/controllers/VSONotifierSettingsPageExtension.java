@@ -16,50 +16,57 @@
 
 package jetbrains.buildServer.vsoRooms.controllers;
 
-import jetbrains.buildServer.notification.NotificationRulesManager;
+import jetbrains.buildServer.controllers.BaseFormXmlController;
 import jetbrains.buildServer.users.User;
 import jetbrains.buildServer.users.UserModel;
 import jetbrains.buildServer.users.UserNotFoundException;
 import jetbrains.buildServer.vsoRooms.Constants;
-import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfig;
-import jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfigHolder;
-import jetbrains.buildServer.vsoRooms.notificator.VSOUserProperties;
 import jetbrains.buildServer.web.openapi.PlaceId;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.SimplePageExtension;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
 import jetbrains.buildServer.web.util.SessionUser;
 import jetbrains.buildServer.web.util.WebUtil;
+import org.apache.log4j.Logger;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class UserVSONotificationSettingsExtension extends SimplePageExtension {
+public class VSONotifierSettingsPageExtension extends SimplePageExtension {
 
-  private final VSONotificatorConfig myConfig;
+  private static final Logger LOG = Logger.getLogger(VSONotifierSettingsPageExtension.class);
+
   private final UserModel myUserModel;
-  private final NotificationRulesManager myRulesManager;
 
-  public UserVSONotificationSettingsExtension(@NotNull WebControllerManager manager,
-                                              @NotNull NotificationRulesManager rulesManager,
-                                              @NotNull UserModel userModel,
-                                              @NotNull PluginDescriptor pluginDescriptor,
-                                              @NotNull VSONotificatorConfigHolder configHolder) {
-    super(manager);
-    myRulesManager = rulesManager;
+  public VSONotifierSettingsPageExtension(@NotNull WebControllerManager web,
+                                          @NotNull UserModel userModel,
+                                          @NotNull PluginDescriptor pluginDescriptor) {
+    super(web);
     myUserModel = userModel;
-    myConfig = configHolder.getConfig();
 
     setPluginName(Constants.NOTIFICATOR_TYPE);
-    setIncludeUrl(pluginDescriptor.getPluginResourcesPath("userSettings.jsp"));
+    setIncludeUrl(pluginDescriptor.getPluginResourcesPath("editUserSettings.jsp"));
     setPlaceId(PlaceId.NOTIFIER_SETTINGS_FRAGMENT);
     register();
-    setPlaceId(PlaceId.MY_SETTINGS_NOTIFIER_SECTION);
-    register();
+
+    web.registerController("/vso/userSettings.html", new BaseFormXmlController() {
+      @Override
+      protected ModelAndView doGet(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
+        return null;
+      }
+
+      @Override
+      protected void doPost(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Element xmlResponse) {
+        LOG.debug("called");
+      }
+    });
   }
 
   @Override
@@ -77,14 +84,6 @@ public class UserVSONotificationSettingsExtension extends SimplePageExtension {
       if (user == null) throw new UserNotFoundException(userId, "User with id " + userIdStr + " does not exist");
     }
 
-    boolean showTeamRoomNotConfiguredWarning = false;
-    boolean showCredentialsNotConfiguredWarning = false;
-    if (myRulesManager.isRulesWithEventsConfigured(user.getId(), getPluginName())) {
-      showTeamRoomNotConfiguredWarning = !VSOUserProperties.isTargetTeamRoomConfigured(user);
-      showCredentialsNotConfiguredWarning = !VSOUserProperties.isCredentialsConfigured(user);
-    }
-    model.put("showTeamRoomNotConfiguredWarning", showTeamRoomNotConfiguredWarning);
-    model.put("showCredentialsNotConfiguredWarning", showCredentialsNotConfiguredWarning);
-    model.put("showPausedWarning", myConfig.isPaused());
+    model.put("settingsBean", VSONotificationUserSettingsBean.forUser(user));
   }
 }

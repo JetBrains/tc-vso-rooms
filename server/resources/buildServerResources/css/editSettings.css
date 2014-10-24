@@ -17,3 +17,7 @@
 .editNotificatorSettingsPage {
   width: 75%;
 }
+
+.vsoUserSettingsTable th {
+  text-align: left;
+}

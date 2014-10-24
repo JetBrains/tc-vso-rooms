@@ -77,7 +77,7 @@ public class VSONotificator extends NotificatorAdapter {
     myMessageBuilder = builder;
     myConfig = configHolder.getConfig();
     myMessageSender = new VSOMessageSender(new VSOTeamRoomsAPIImpl());
-    registry.register(this, VSOUserProperties.USER_PROPERTIES);
+    registry.register(this);
   }
 
   @NotNull

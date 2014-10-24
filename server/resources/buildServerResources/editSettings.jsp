@@ -21,10 +21,6 @@
   /css/admin/serverConfig.css
   /plugins/vso-rooms/css/editSettings.css
 </bs:linkCSS>
-<bs:linkScript>
-  /js/bs/testConnection.js
-  /plugins/vso-rooms/js/editSettings.js
-</bs:linkScript>
 
 <jsp:useBean id="vsoRoomsSettings" scope="request" type="jetbrains.buildServer.vsoRooms.controllers.VSONotificatorSettingsBean"/>
 

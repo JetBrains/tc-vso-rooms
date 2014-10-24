@@ -1,5 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
-%><%--
+<%--
   ~ Copyright 2000-2014 JetBrains s.r.o.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +14,12 @@
   ~ limitations under the License.
   --%>
 
+<%@ include file="/include.jsp" %>
+
 <jsp:useBean id="showTeamRoomNotConfiguredWarning" type="java.lang.Boolean" scope="request"/>
 <jsp:useBean id="showCredentialsNotConfiguredWarning" type="java.lang.Boolean" scope="request"/>
 <jsp:useBean id="showPausedWarning" type="java.lang.Boolean" scope="request"/>
+<jsp:useBean id="settingsBean" type="jetbrains.buildServer.vsoRooms.controllers.VSONotificationUserSettingsBean" scope="request"/>
 
 <c:choose>
   <c:when test="${showPausedWarning}">
@@ -36,3 +38,10 @@
     </div>
   </c:when>
 </c:choose>
+
+<div>
+  <p><label class="tableLabel" for="vso-account">Account: </label><span id="vso-account"><c:out value="${settingsBean.account}" /></span></p>
+  <p><label class="tableLabel" for="team-room">Team Room Name: </label><span id="team-room"><c:out value="${settingsBean.teamRoomName}" /></span></p>
+  <p><label class="tableLabel" for="vso-username">Username: </label><span id="vso-username"><c:out value="${settingsBean.username}" /></span></p>
+</div>
+

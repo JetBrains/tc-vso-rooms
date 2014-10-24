@@ -12,6 +12,7 @@
   <bean class="jetbrains.buildServer.vsoRooms.notificator.VSONotificator"/>
   <bean class="jetbrains.buildServer.vsoRooms.notificator.VSONotificatorConfigHolder"/>
   <bean class="jetbrains.buildServer.vsoRooms.controllers.VSONotificatorSettingsController"/>
-  <bean class="jetbrains.buildServer.vsoRooms.controllers.UserVSONotificationSettingsExtension"/>
+  <bean class="jetbrains.buildServer.vsoRooms.controllers.VSONotifierMySettingsPageExtension"/>
+  <bean class="jetbrains.buildServer.vsoRooms.controllers.VSONotifierSettingsPageExtension"/>
 
 </beans>
