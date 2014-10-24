@@ -21,6 +21,7 @@
 .vsoUserSettingsTable th {
   text-align: left;
   vertical-align: top;
+  width: 26%;
 }
 
 .vsoUserSettingsTable span.error {

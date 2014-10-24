@@ -46,6 +46,7 @@
           &nbsp;&nbsp;<input type="submit" class="btn btn_mini" id="save-btn" value="Save"/>
           &nbsp;&nbsp;<input type="button" class="btn btn_mini" id="test-connection-btn" value="Test Connection"/>
           &nbsp;<forms:saving/>
+          <span class="fieldExplanation" id="explanation_account">{account}.visualstudio.com</span>
           <span class="error" id="errorAccount"></span>
         </td>
       </tr>
@@ -67,6 +68,9 @@
         <th><label for="password">Password: </label></th>
         <td>
           <forms:passwordField name="password" encryptedPassword="${settingsBean.encryptedPassword}"/>
+          <span class="fieldExplanation" id="explanation_secure:password">
+            <a href="http://www.visualstudio.com/en-us/integrate/get-started/get-started-auth-introduction-vsi">Alternate Credentials</a> must be enabled for used account
+          </span>
           <span class="error" id="errorPassword"></span>
         </td>
       </tr>
