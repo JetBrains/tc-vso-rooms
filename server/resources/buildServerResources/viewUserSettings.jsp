@@ -16,6 +16,10 @@
 
 <%@ include file="/include.jsp" %>
 
+<bs:linkCSS dynamic="${true}">
+  /plugins/vso-rooms/css/editSettings.css
+</bs:linkCSS>
+
 <jsp:useBean id="showPausedWarning" type="java.lang.Boolean" scope="request"/>
 <jsp:useBean id="settingsBean" type="jetbrains.buildServer.vsoRooms.controllers.VSONotificationUserSettingsBean" scope="request"/>
 
@@ -36,7 +40,7 @@
     </div>
   </c:when>
   <c:otherwise>
-    <div class="notConfigured">
+    <div class="noRules">
       You have not configured VSO notifications yet.
     </div>
   </c:otherwise>
