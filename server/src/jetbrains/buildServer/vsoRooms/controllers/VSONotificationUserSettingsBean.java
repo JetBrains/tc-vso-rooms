@@ -48,10 +48,10 @@ public class VSONotificationUserSettingsBean extends RememberState {
 
   @NotNull
   public static VSONotificationUserSettingsBean createFromUserSettings(@NotNull User user) {
-    final String account = VSOUserProperties.getAccount(user);
-    final String teamRoomName = VSOUserProperties.getTeamRoomName(user);
-    final String username = VSOUserProperties.getUsername(user);
-    final String password = VSOUserProperties.getPassword(user);
+    final String account = StringUtil.emptyIfNull(VSOUserProperties.getAccount(user));
+    final String teamRoomName = StringUtil.emptyIfNull(VSOUserProperties.getTeamRoomName(user));
+    final String username = StringUtil.emptyIfNull(VSOUserProperties.getUsername(user));
+    final String password = StringUtil.emptyIfNull(VSOUserProperties.getPassword(user));
     return new VSONotificationUserSettingsBean(account, teamRoomName, username, password);
   }
 
@@ -105,5 +105,9 @@ public class VSONotificationUserSettingsBean extends RememberState {
 
   public void setPassword(String password) {
     myPassword = password;
+  }
+
+  public boolean isWellFormed() {
+    return StringUtil.isNotEmpty(myAccount) && StringUtil.isNotEmpty(myTeamRoomName) && StringUtil.isNotEmpty(myUsername) && StringUtil.isNotEmpty(myPassword);
   }
 }

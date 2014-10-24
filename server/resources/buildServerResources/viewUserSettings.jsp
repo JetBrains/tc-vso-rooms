@@ -16,8 +16,6 @@
 
 <%@ include file="/include.jsp" %>
 
-<jsp:useBean id="showTeamRoomNotConfiguredWarning" type="java.lang.Boolean" scope="request"/>
-<jsp:useBean id="showCredentialsNotConfiguredWarning" type="java.lang.Boolean" scope="request"/>
 <jsp:useBean id="showPausedWarning" type="java.lang.Boolean" scope="request"/>
 <jsp:useBean id="settingsBean" type="jetbrains.buildServer.vsoRooms.controllers.VSONotificationUserSettingsBean" scope="request"/>
 
@@ -27,21 +25,20 @@
       Notification rules will not work because Visual Studio Online notifier is disabled.
   </div>
   </c:when>
-  <c:when test="${showTeamRoomNotConfiguredWarning}">
-    <div class="attentionComment attentionCommentNotifier">
-      Notification rules will not work until you set up target Visual Studio Online Account and Team Room name.
-     </div>
-  </c:when>
-  <c:when test="${showCredentialsNotConfiguredWarning}">
-    <div class="attentionComment attentionCommentNotifier">
-      Notification rules will not work until you set up Username and Password.
-    </div>
-  </c:when>
 </c:choose>
 
-<div>
-  <p><label class="tableLabel" for="vso-account">Account: </label><span id="vso-account"><c:out value="${settingsBean.account}" /></span></p>
-  <p><label class="tableLabel" for="team-room">Team Room Name: </label><span id="team-room"><c:out value="${settingsBean.teamRoomName}" /></span></p>
-  <p><label class="tableLabel" for="vso-username">Username: </label><span id="vso-username"><c:out value="${settingsBean.username}" /></span></p>
-</div>
+<c:choose>
+  <c:when test="${settingsBean.wellFormed}">
+    <div>
+      <p><label class="tableLabel" for="vso-account">Account: </label><span id="vso-account"><c:out value="${settingsBean.account}" /></span></p>
+      <p><label class="tableLabel" for="team-room">Team Room Name: </label><span id="team-room"><c:out value="${settingsBean.teamRoomName}" /></span></p>
+      <p><label class="tableLabel" for="vso-username">Username: </label><span id="vso-username"><c:out value="${settingsBean.username}" /></span></p>
+    </div>
+  </c:when>
+  <c:otherwise>
+    <div class="notConfigured">
+      You have not configured VSO notifications yet.
+    </div>
+  </c:otherwise>
+</c:choose>
 
