@@ -24,7 +24,7 @@ VSOTeamRooms.UserSettingsForm = OO.extend(BS.AbstractPasswordForm, {
 
   setupEventHandlers: function() {
     var that = this;
-    $('testConnection').on('click', this.testConnection.bindAsEventListener(this));
+    $('test-connection-btn').on('click', this.testConnection.bindAsEventListener(this));
   },
 
   submitSettings: function() {

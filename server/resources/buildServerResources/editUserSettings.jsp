@@ -43,6 +43,9 @@
         <th><label for="account">Account: </label></th>
         <td>
           <forms:textField name="account" value="${settingsBean.account}" />
+          &nbsp;&nbsp;<input type="submit" class="btn btn_mini" id="save-btn" value="Save"/>
+          &nbsp;&nbsp;<input type="button" class="btn btn_mini" id="test-connection-btn" value="Test Connection"/>
+          &nbsp;<forms:saving/>
           <span class="error" id="errorAccount"></span>
         </td>
       </tr>
@@ -69,13 +72,8 @@
       </tr>
     </table>
 
-    <div class="saveButtonsBlock">
-      <forms:submit label="Save"/>
-      <forms:submit id="testConnection" type="button" label="Test connection"/>
-      <input type="hidden" id="submitSettings" name="submitSettings" value="store"/>
-      <input type="hidden" id="publicKey" name="publicKey" value="<c:out value='${settingsBean.hexEncodedPublicKey}'/>"/>
-      <forms:saving/>
-    </div>
+    <input type="hidden" id="submitSettings" name="submitSettings" value="store"/>
+    <input type="hidden" id="publicKey" name="publicKey" value="<c:out value='${settingsBean.hexEncodedPublicKey}'/>"/>
 
   </form>
 </div>
