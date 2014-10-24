@@ -84,6 +84,6 @@ public class VSONotifierMySettingsPageExtension extends SimplePageExtension {
     model.put("showTeamRoomNotConfiguredWarning", showTeamRoomNotConfiguredWarning);
     model.put("showCredentialsNotConfiguredWarning", showCredentialsNotConfiguredWarning);
 
-    model.put("settingsBean", VSONotificationUserSettingsBean.forUser(user));
+    model.put("settingsBean", VSONotificationUserSettingsBean.createFromUserSettings(user));
   }
 }

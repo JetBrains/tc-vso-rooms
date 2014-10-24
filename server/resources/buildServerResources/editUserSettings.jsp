@@ -29,6 +29,13 @@
 
 <c:url value="/vso/userSettings.html?edit=1" var="url"/>
 
+<script type="text/javascript">
+  document.observe("dom:loaded", function() {
+    VSOTeamRooms.UserSettingsForm.setupEventHandlers();
+    $('account').focus();
+  });
+</script>
+
 <div class="notifierSettings clearfix">
   <form action="${url}" method="post" autocomplete="off" onsubmit="return VSOTeamRooms.UserSettingsForm.submitSettings()">
     <table class="vsoUserSettingsTable">
@@ -40,10 +47,10 @@
         </td>
       </tr>
       <tr>
-        <th><label for="roomName">Team Room Name: </label></th>
+        <th><label for="teamRoomName">Team Room Name: </label></th>
         <td>
-          <forms:textField name="roomName" value="${settingsBean.teamRoomName}"/>
-          <span class="error" id="errorRoomname"></span>
+          <forms:textField name="teamRoomName" value="${settingsBean.teamRoomName}"/>
+          <span class="error" id="errorTeamRoomName"></span>
         </td>
       </tr>
       <tr>
@@ -61,6 +68,21 @@
         </td>
       </tr>
     </table>
+
+    <div class="saveButtonsBlock">
+      <forms:submit label="Save"/>
+      <forms:submit id="testConnection" type="button" label="Test connection"/>
+      <input type="hidden" id="submitSettings" name="submitSettings" value="store"/>
+      <input type="hidden" id="publicKey" name="publicKey" value="<c:out value='${settingsBean.hexEncodedPublicKey}'/>"/>
+      <forms:saving/>
+    </div>
+
   </form>
 </div>
+
+<bs:dialog dialogId="testConnectionDialog" title="Test Connection" closeCommand="BS.TestConnectionDialog.close();"
+           closeAttrs="showdiscardchangesmessage='false'">
+  <div id="testConnectionStatus"></div>
+  <div id="testConnectionDetails" class="mono"></div>
+</bs:dialog>
 

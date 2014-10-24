@@ -16,33 +16,50 @@
 
 package jetbrains.buildServer.vsoRooms.controllers;
 
+import jetbrains.buildServer.Used;
+import jetbrains.buildServer.controllers.RememberState;
+import jetbrains.buildServer.serverSide.crypt.RSACipher;
+import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.users.User;
+import jetbrains.buildServer.util.StringUtil;
 import jetbrains.buildServer.vsoRooms.notificator.VSOUserProperties;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class VSONotificationUserSettingsBean {
-  private String myAccount;
-  private String myUsername;
-  private String myTeamRoomName;
-  private String myEncryptedPassword;
+public class VSONotificationUserSettingsBean extends RememberState {
 
-  public VSONotificationUserSettingsBean(@NotNull String account, @NotNull String teamRoomName, @NotNull String username, @NotNull String encryptedPassword) {
+  private String myAccount;
+  private String myTeamRoomName;
+  private String myUsername;
+  private String myPassword;
+
+  public VSONotificationUserSettingsBean() {
+  }
+
+  public VSONotificationUserSettingsBean(@NotNull String account, @NotNull String teamRoomName, @NotNull String username, @NotNull String password) {
     myAccount = account;
     myTeamRoomName = teamRoomName;
     myUsername = username;
-    myEncryptedPassword = encryptedPassword;
+    myPassword = password;
+    rememberState();
   }
 
   @NotNull
-  public static VSONotificationUserSettingsBean forUser(@NotNull User user) {
+  public static VSONotificationUserSettingsBean createFromUserSettings(@NotNull User user) {
     final String account = VSOUserProperties.getAccount(user);
     final String teamRoomName = VSOUserProperties.getTeamRoomName(user);
     final String username = VSOUserProperties.getUsername(user);
     final String password = VSOUserProperties.getPassword(user);
     return new VSONotificationUserSettingsBean(account, teamRoomName, username, password);
+  }
+
+  public static void saveAsUserSettings(@NotNull VSONotificationUserSettingsBean settings, @NotNull SUser user) {
+    VSOUserProperties.setAccount(user, settings.getAccount());
+    VSOUserProperties.setTeamRoomName(user, settings.getTeamRoomName());
+    VSOUserProperties.setUsername(user, settings.getUsername());
+    VSOUserProperties.setPassword(user, settings.getPassword());
   }
 
   public String getAccount() {
@@ -57,7 +74,36 @@ public class VSONotificationUserSettingsBean {
     return myTeamRoomName;
   }
 
+  public String getHexEncodedPublicKey() {
+    return RSACipher.getHexEncodedPublicKey();
+  }
+
   public String getEncryptedPassword() {
-    return myEncryptedPassword;
+    return StringUtil.isEmpty(myPassword) ? "" : RSACipher.encryptDataForWeb(myPassword);
+  }
+
+  @Used("jsp")
+  public void setEncryptedPassword(final String encrypted) {
+    myPassword = RSACipher.decryptWebRequestData(encrypted);
+  }
+
+  public String getPassword() {
+    return myPassword;
+  }
+
+  public void setAccount(String account) {
+    myAccount = account;
+  }
+
+  public void setTeamRoomName(String teamRoomName) {
+    myTeamRoomName = teamRoomName;
+  }
+
+  public void setUsername(String username) {
+    myUsername = username;
+  }
+
+  public void setPassword(String password) {
+    myPassword = password;
   }
 }
