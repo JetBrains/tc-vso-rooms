@@ -45,7 +45,7 @@
       <table class="runnerFormTable">
         <tr class="noBorder">
           <td>
-            <b>${vsoRoomsSettings.numberOfAffectedUsers}</b> user<bs:s val="${vsoRoomsSettings.numberOfAffectedUsers}"/> configured notification rules.
+            <b>${vsoRoomsSettings.numberOfAffectedUsers}</b> user<bs:s val="${vsoRoomsSettings.numberOfAffectedUsers}"/> configured VS Online notification rules.
           </td>
         </tr>
         <tr class="noBorder">
