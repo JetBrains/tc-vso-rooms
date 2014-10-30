@@ -36,6 +36,10 @@
   });
 </script>
 
+<p class="notificationRulesMessage">
+  Specify the events you want to monitor in <a href="http://www.visualstudio.com/en-us/get-started/collaborate-in-the-team-room-vs.aspx">Microsoft Visual Studio Online</a> team rooms.
+</p>
+
 <div class="notifierSettings clearfix">
   <form action="${url}" method="post" autocomplete="off" onsubmit="return VSOTeamRooms.UserSettingsForm.submitSettings()">
     <table class="vsoUserSettingsTable">

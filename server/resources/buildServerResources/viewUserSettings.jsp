@@ -23,6 +23,10 @@
 <jsp:useBean id="showPausedWarning" type="java.lang.Boolean" scope="request"/>
 <jsp:useBean id="settingsBean" type="jetbrains.buildServer.vsoRooms.controllers.VSONotificationUserSettingsBean" scope="request"/>
 
+<p class="notificationRulesMessage">
+  Allows to monitor events in <a href="http://www.visualstudio.com/en-us/get-started/collaborate-in-the-team-room-vs.aspx">Microsoft Visual Studio Online</a> team rooms.
+</p>
+
 <c:choose>
   <c:when test="${showPausedWarning}">
   <div class="attentionComment attentionCommentNotifier">
