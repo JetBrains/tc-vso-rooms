@@ -88,7 +88,7 @@ public class VSONotificator extends NotificatorAdapter {
   @NotNull
   @Override
   public String getDisplayName() {
-    return "VSO Notifier";
+    return "VS Online Notifier";
   }
 
   @Override

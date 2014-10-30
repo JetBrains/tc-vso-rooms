@@ -44,7 +44,7 @@ public class VSONotificatorSettingsController extends NotifierSettingsTab<VSONot
                                           @NotNull WebControllerManager webControllerManager,
                                           @NotNull VSONotificatorConfigHolder configHolder,
                                           @NotNull UserModel users) {
-    super(pluginDescriptor, webControllerManager, SETTINGS_BEAN_KEY, "VSO Notifier");
+    super(pluginDescriptor, webControllerManager, SETTINGS_BEAN_KEY, "VS Online Notifier");
     myUsers = users;
     myConfig = configHolder.getConfig();
     registerDisableActions();
