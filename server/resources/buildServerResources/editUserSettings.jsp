@@ -47,9 +47,6 @@
         <th><label for="account">Account: </label></th>
         <td>
           <forms:textField name="account" value="${settingsBean.account}" />
-          &nbsp;&nbsp;<input type="submit" class="btn btn_mini" id="save-btn" value="Save"/>
-          &nbsp;&nbsp;<input type="button" class="btn btn_mini" id="test-connection-btn" value="Test Connection"/>
-          &nbsp;<forms:saving/>
           <span class="fieldExplanation" id="explanation_account">{account}.visualstudio.com</span>
           <span class="error" id="errorAccount"></span>
         </td>
@@ -79,6 +76,12 @@
         </td>
       </tr>
     </table>
+
+    <div class="saveButtonsBlock" style="margin-top: 0; margin-bottom: 0">
+      <input type="submit" class="btn btn_primary" id="save-btn" value="Save"/>
+      <input type="button" class="btn btn_primary" id="test-connection-btn" value="Test Connection"/>
+      <forms:saving/>
+    </div>
 
     <input type="hidden" id="submitSettings" name="submitSettings" value="store"/>
     <input type="hidden" id="publicKey" name="publicKey" value="<c:out value='${settingsBean.hexEncodedPublicKey}'/>"/>
