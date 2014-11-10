@@ -6,4 +6,6 @@ Target team room and Visual Studio Online account as well as "on behalf of" Visu
 
 Notifications about particular event sent on behalf of several users to one room whould be merged.
 
+Official [plugin page] (https://confluence.jetbrains.com/display/TW/Visual+Studio+Online+Team+Rooms+Notifier)
+
 Public CI [build] (https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_Unsorted_VsoTeamRoomsNotifie)
