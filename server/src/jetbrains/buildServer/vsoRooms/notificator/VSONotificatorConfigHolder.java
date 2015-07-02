@@ -30,7 +30,7 @@ public class VSONotificatorConfigHolder {
   private VSONotificatorConfig myConfig;
 
   public VSONotificatorConfigHolder(@NotNull ServerPaths serverPaths, @NotNull SBuildServer server) throws IOException {
-    myConfig = new VSONotificatorConfig(serverPaths, server);
+    myConfig = new VSONotificatorConfig(serverPaths);
     server.addListener(new BuildServerAdapter() {
       @Override
       public void serverShutdown() {

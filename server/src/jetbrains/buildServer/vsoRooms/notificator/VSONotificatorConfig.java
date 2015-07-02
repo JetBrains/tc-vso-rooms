@@ -22,7 +22,6 @@ import freemarker.template.Template;
 import jetbrains.buildServer.configuration.ChangeListener;
 import jetbrains.buildServer.configuration.FileWatcher;
 import jetbrains.buildServer.notification.FreeMarkerHelper;
-import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.ServerPaths;
 import jetbrains.buildServer.util.FileUtil;
 import jetbrains.buildServer.vsoRooms.Constants;
@@ -52,7 +51,7 @@ public class VSONotificatorConfig implements ChangeListener {
 
   private boolean myPaused;
 
-  public VSONotificatorConfig(@NotNull ServerPaths serverPaths, @NotNull SBuildServer server) throws IOException {
+  public VSONotificatorConfig(@NotNull ServerPaths serverPaths) throws IOException {
     final File configDir = new File(serverPaths.getConfigDir(), FreeMarkerHelper.TEMPLATES_ROOT + "/" + Constants.NOTIFICATOR_TYPE);
     configDir.mkdirs();
     myConfigFile = new File(configDir, CONFIG_FILENAME);
@@ -66,7 +65,7 @@ public class VSONotificatorConfig implements ChangeListener {
     myChangeObserver.registerListener(this);
     myChangeObserver.start();
 
-    myConfiguration = FreeMarkerHelper.getConfiguration(server);
+    myConfiguration = FreeMarkerHelper.getConfiguration(serverPaths);
   }
 
   public void changeOccured(String requestor) {
